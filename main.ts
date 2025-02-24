@@ -72,8 +72,8 @@ ScriptApp.onJoinPlayer.Add((player) => {
 });
 
 function renderMbtiQuestion(player: ScriptPlayer) {
-    const questionNum = player.tag.questionNum;
-    const mbtiQuestion = MBTIQuestions[questionNum];
+    const questionIndex = player.tag.questionNum - 1;
+    const mbtiQuestion = MBTIQuestions[questionIndex];
 
     createTextObject(player,
         mbtiQuestion.question,

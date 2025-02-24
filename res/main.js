@@ -2182,8 +2182,8 @@ App.onJoinPlayer.Add(function (player) {
   }, 1);
 });
 function renderMbtiQuestion(player) {
-  var questionNum = player.tag.questionNum;
-  var mbtiQuestion = MBTIQuestions_1.MBTIQuestions[questionNum];
+  var questionIndex = player.tag.questionNum - 1;
+  var mbtiQuestion = MBTIQuestions_1.MBTIQuestions[questionIndex];
   (0, Utillity_1.createTextObject)(player, mbtiQuestion.question, Location.MainScreen.x, Location.MainScreen.y, {
     color: "white",
     fontSize: "20px",
