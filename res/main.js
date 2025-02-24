@@ -1907,7 +1907,7 @@ Object.entries(Location.Selects).forEach(function (_a, index) {
   //@ts-ignore
   App.addOnLocationEnter(key, function (player) {
     var questionNum = player.tag.questionNum;
-    if (questionNum < QuestionSize) {
+    if (questionNum < QuestionSize && MBTIQuestions_1.MBTIQuestions[questionNum]) {
       player.tag.answers.push({
         id: questionNum,
         value: index - 2

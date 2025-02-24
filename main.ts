@@ -31,13 +31,12 @@ Object.entries(Location.Selects).forEach(([key, location], index) => {
     //@ts-ignore
     ScriptApp.addOnLocationEnter(key, (player: ScriptPlayer) => {
         const questionNum = player.tag.questionNum;
-        if (questionNum < QuestionSize) {
+        if (questionNum < QuestionSize && MBTIQuestions[questionNum]) {
             player.tag.answers.push({ id: questionNum, value: index - 2 });
             // player.sendMessage(JSON.stringify(player.tag.answers));
             player.spawnAtLocation("start");
             player.tag.questionNum++;
             renderMbtiQuestion(player);
-
             player.showCenterLabel(`${questionNum}/${QuestionSize} 완료`);
         } else {
             const mbtiInfo = calculateMBTI(player.tag.answers);
