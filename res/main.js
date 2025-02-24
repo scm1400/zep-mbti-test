@@ -311,207 +311,128 @@ exports.MBTIQuestions = [{
     "text": "매우 그렇다",
     "value": 2
   }]
-}, {
-  "id": 16,
-  "dimension": "EI",
-  "question": "전화 통화나 직접 만남으로 소통하는 것을 크게 부담스럽지 않게 느낀다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 17,
-  "dimension": "EI",
-  "question": "내 의견을 듣기 전에 다른 사람의 생각을 들어보려 해도, 결국 내 생각도 빨리 공유하고 싶다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 18,
-  "dimension": "EI",
-  "question": "흥미로운 주제가 나오면 여러 사람들과 활발하게 토론하고 싶다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 19,
-  "dimension": "EI",
-  "question": "사적인 공간보다 대중적인 장소에서 더 활기찬 에너지를 느낀다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 20,
-  "dimension": "EI",
-  "question": "낯선 환경에서도 빠르게 적응하여 사람들과 잘 어울린다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 21,
-  "dimension": "EI",
-  "question": "혼자서 오랜 시간을 보내면 오히려 지치거나 답답해진다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 22,
-  "dimension": "EI",
-  "question": "여럿이 모인 자리에서 발표하거나 이야기하는 것을 두려워하지 않는다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 23,
-  "dimension": "EI",
-  "question": "사교 모임이 취소되면 조금 아쉬움을 느낀다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 24,
-  "dimension": "EI",
-  "question": "새로운 사람과 만나면 대화 주제를 찾는 데 큰 어려움이 없다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 25,
-  "dimension": "EI",
-  "question": "혼자 있을 때보다 사람들과 함께 있을 때 아이디어가 잘 나온다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
+},
+// {
+//   "id": 16,
+//   "dimension": "EI",
+//   "question": "전화 통화나 직접 만남으로 소통하는 것을 크게 부담스럽지 않게 느낀다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",        "value": 0 },
+//     { "text": "그런 편이다",    "value": 1 },
+//     { "text": "매우 그렇다",    "value": 2 }
+//   ]
+// },
+// {
+//   "id": 17,
+//   "dimension": "EI",
+//   "question": "내 의견을 듣기 전에 다른 사람의 생각을 들어보려 해도, 결국 내 생각도 빨리 공유하고 싶다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",        "value": 0 },
+//     { "text": "그런 편이다",    "value": 1 },
+//     { "text": "매우 그렇다",    "value": 2 }
+//   ]
+// },
+// {
+//   "id": 18,
+//   "dimension": "EI",
+//   "question": "흥미로운 주제가 나오면 여러 사람들과 활발하게 토론하고 싶다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",        "value": 0 },
+//     { "text": "그런 편이다",    "value": 1 },
+//     { "text": "매우 그렇다",    "value": 2 }
+//   ]
+// },
+// {
+//   "id": 19,
+//   "dimension": "EI",
+//   "question": "사적인 공간보다 대중적인 장소에서 더 활기찬 에너지를 느낀다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",        "value": 0 },
+//     { "text": "그런 편이다",    "value": 1 },
+//     { "text": "매우 그렇다",    "value": 2 }
+//   ]
+// },
+// {
+//   "id": 20,
+//   "dimension": "EI",
+//   "question": "낯선 환경에서도 빠르게 적응하여 사람들과 잘 어울린다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",        "value": 0 },
+//     { "text": "그런 편이다",    "value": 1 },
+//     { "text": "매우 그렇다",    "value": 2 }
+//   ]
+// },
+// {
+//   "id": 21,
+//   "dimension": "EI",
+//   "question": "혼자서 오랜 시간을 보내면 오히려 지치거나 답답해진다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",        "value": 0 },
+//     { "text": "그런 편이다",    "value": 1 },
+//     { "text": "매우 그렇다",    "value": 2 }
+//   ]
+// },
+// {
+//   "id": 22,
+//   "dimension": "EI",
+//   "question": "여럿이 모인 자리에서 발표하거나 이야기하는 것을 두려워하지 않는다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",        "value": 0 },
+//     { "text": "그런 편이다",    "value": 1 },
+//     { "text": "매우 그렇다",    "value": 2 }
+//   ]
+// },
+// {
+//   "id": 23,
+//   "dimension": "EI",
+//   "question": "사교 모임이 취소되면 조금 아쉬움을 느낀다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",        "value": 0 },
+//     { "text": "그런 편이다",    "value": 1 },
+//     { "text": "매우 그렇다",    "value": 2 }
+//   ]
+// },
+// {
+//   "id": 24,
+//   "dimension": "EI",
+//   "question": "새로운 사람과 만나면 대화 주제를 찾는 데 큰 어려움이 없다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",        "value": 0 },
+//     { "text": "그런 편이다",    "value": 1 },
+//     { "text": "매우 그렇다",    "value": 2 }
+//   ]
+// },
+// {
+//   "id": 25,
+//   "dimension": "EI",
+//   "question": "혼자 있을 때보다 사람들과 함께 있을 때 아이디어가 잘 나온다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",        "value": 0 },
+//     { "text": "그런 편이다",    "value": 1 },
+//     { "text": "매우 그렇다",    "value": 2 }
+//   ]
+// },
+{
   "id": 26,
   "dimension": "SN",
   "question": "아이디어보다는 실제 경험을 통해 배우는 것을 선호한다.",
@@ -811,207 +732,128 @@ exports.MBTIQuestions = [{
     "text": "매우 그렇다",
     "value": 2
   }]
-}, {
-  "id": 41,
-  "dimension": "SN",
-  "question": "실행하기 전에 테스트나 시뮬레이션을 꼼꼼히 거쳐보고 싶다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 42,
-  "dimension": "SN",
-  "question": "모호한 가정보다는 확실한 사실 관계를 먼저 파악한다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 43,
-  "dimension": "SN",
-  "question": "주변 환경의 작은 단서도 놓치지 않고 살피는 편이다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 44,
-  "dimension": "SN",
-  "question": "복잡한 이론보다는 구체적인 사례 예시가 이해하기 쉽다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 45,
-  "dimension": "SN",
-  "question": "아이디어가 떠올라도 먼저 현실화가 가능한지부터 생각한다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 46,
-  "dimension": "SN",
-  "question": "절차와 규칙을 정확히 따르는 것이 중요하다고 생각한다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 47,
-  "dimension": "SN",
-  "question": "미래 트렌드를 예측하기보다는 현재 시장 상황을 분석하기 좋아한다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 48,
-  "dimension": "SN",
-  "question": "물질적인 증거나 데이터를 통해 문제를 파악하는 것이 안전하다고 본다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 49,
-  "dimension": "SN",
-  "question": "문제를 해결할 때 '실제 사례'가 더 중요하다고 느낀다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 50,
-  "dimension": "SN",
-  "question": "추상적인 논의보다는 구체적 수치와 데이터가 더 신뢰가 간다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
+},
+// {
+//   "id": 41,
+//   "dimension": "SN",
+//   "question": "실행하기 전에 테스트나 시뮬레이션을 꼼꼼히 거쳐보고 싶다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",         "value": 0 },
+//     { "text": "그런 편이다",     "value": 1 },
+//     { "text": "매우 그렇다",     "value": 2 }
+//   ]
+// },
+// {
+//   "id": 42,
+//   "dimension": "SN",
+//   "question": "모호한 가정보다는 확실한 사실 관계를 먼저 파악한다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",         "value": 0 },
+//     { "text": "그런 편이다",     "value": 1 },
+//     { "text": "매우 그렇다",     "value": 2 }
+//   ]
+// },
+// {
+//   "id": 43,
+//   "dimension": "SN",
+//   "question": "주변 환경의 작은 단서도 놓치지 않고 살피는 편이다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",         "value": 0 },
+//     { "text": "그런 편이다",     "value": 1 },
+//     { "text": "매우 그렇다",     "value": 2 }
+//   ]
+// },
+// {
+//   "id": 44,
+//   "dimension": "SN",
+//   "question": "복잡한 이론보다는 구체적인 사례 예시가 이해하기 쉽다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",         "value": 0 },
+//     { "text": "그런 편이다",     "value": 1 },
+//     { "text": "매우 그렇다",     "value": 2 }
+//   ]
+// },
+// {
+//   "id": 45,
+//   "dimension": "SN",
+//   "question": "아이디어가 떠올라도 먼저 현실화가 가능한지부터 생각한다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",         "value": 0 },
+//     { "text": "그런 편이다",     "value": 1 },
+//     { "text": "매우 그렇다",     "value": 2 }
+//   ]
+// },
+// {
+//   "id": 46,
+//   "dimension": "SN",
+//   "question": "절차와 규칙을 정확히 따르는 것이 중요하다고 생각한다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",         "value": 0 },
+//     { "text": "그런 편이다",     "value": 1 },
+//     { "text": "매우 그렇다",     "value": 2 }
+//   ]
+// },
+// {
+//   "id": 47,
+//   "dimension": "SN",
+//   "question": "미래 트렌드를 예측하기보다는 현재 시장 상황을 분석하기 좋아한다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",         "value": 0 },
+//     { "text": "그런 편이다",     "value": 1 },
+//     { "text": "매우 그렇다",     "value": 2 }
+//   ]
+// },
+// {
+//   "id": 48,
+//   "dimension": "SN",
+//   "question": "물질적인 증거나 데이터를 통해 문제를 파악하는 것이 안전하다고 본다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",         "value": 0 },
+//     { "text": "그런 편이다",     "value": 1 },
+//     { "text": "매우 그렇다",     "value": 2 }
+//   ]
+// },
+// {
+//   "id": 49,
+//   "dimension": "SN",
+//   "question": "문제를 해결할 때 '실제 사례'가 더 중요하다고 느낀다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",         "value": 0 },
+//     { "text": "그런 편이다",     "value": 1 },
+//     { "text": "매우 그렇다",     "value": 2 }
+//   ]
+// },
+// {
+//   "id": 50,
+//   "dimension": "SN",
+//   "question": "추상적인 논의보다는 구체적 수치와 데이터가 더 신뢰가 간다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",         "value": 0 },
+//     { "text": "그런 편이다",     "value": 1 },
+//     { "text": "매우 그렇다",     "value": 2 }
+//   ]
+// },
+{
   "id": 51,
   "dimension": "TF",
   "question": "논리적으로 맞지 않는 이야기에는 즉각적으로 반박하고 싶다.",
@@ -1311,207 +1153,128 @@ exports.MBTIQuestions = [{
     "text": "매우 그렇다",
     "value": 2
   }]
-}, {
-  "id": 66,
-  "dimension": "TF",
-  "question": "내 주장이 논리적으로 확실하다면, 다른 이들의 감정을 거스르더라도 강행한다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 67,
-  "dimension": "TF",
-  "question": "감정적으로 접근하면 비효율적이라 생각하는 편이다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 68,
-  "dimension": "TF",
-  "question": "내 말이 사실이라면, 상대가 상처받아도 어쩔 수 없다고 생각한다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 69,
-  "dimension": "TF",
-  "question": "동료의 실수가 있으면 솔직하고 직설적으로 지적하는 편이다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 70,
-  "dimension": "TF",
-  "question": "누군가 감정적으로 힘들어도, 우선 상황을 객관적으로 파악한다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 71,
-  "dimension": "TF",
-  "question": "감정은 자주 변하지만 데이터나 사실은 변하지 않는다고 믿는다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 72,
-  "dimension": "TF",
-  "question": "원칙과 규칙이 분명하면 감정적 갈등이 줄어든다고 느낀다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 73,
-  "dimension": "TF",
-  "question": "개인 감정보다는 통계나 자료가 설득력이 있다고 본다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 74,
-  "dimension": "TF",
-  "question": "상대방이 거절감을 느끼더라도 피드백을 즉시 전달하는 것을 선호한다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 75,
-  "dimension": "TF",
-  "question": "합리적 판단이 사람들과의 감정적 공감보다 중요하다고 생각한다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
+},
+// {
+//   "id": 66,
+//   "dimension": "TF",
+//   "question": "내 주장이 논리적으로 확실하다면, 다른 이들의 감정을 거스르더라도 강행한다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",         "value": 0 },
+//     { "text": "그런 편이다",     "value": 1 },
+//     { "text": "매우 그렇다",     "value": 2 }
+//   ]
+// },
+// {
+//   "id": 67,
+//   "dimension": "TF",
+//   "question": "감정적으로 접근하면 비효율적이라 생각하는 편이다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",         "value": 0 },
+//     { "text": "그런 편이다",     "value": 1 },
+//     { "text": "매우 그렇다",     "value": 2 }
+//   ]
+// },
+// {
+//   "id": 68,
+//   "dimension": "TF",
+//   "question": "내 말이 사실이라면, 상대가 상처받아도 어쩔 수 없다고 생각한다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",         "value": 0 },
+//     { "text": "그런 편이다",     "value": 1 },
+//     { "text": "매우 그렇다",     "value": 2 }
+//   ]
+// },
+// {
+//   "id": 69,
+//   "dimension": "TF",
+//   "question": "동료의 실수가 있으면 솔직하고 직설적으로 지적하는 편이다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",         "value": 0 },
+//     { "text": "그런 편이다",     "value": 1 },
+//     { "text": "매우 그렇다",     "value": 2 }
+//   ]
+// },
+// {
+//   "id": 70,
+//   "dimension": "TF",
+//   "question": "누군가 감정적으로 힘들어도, 우선 상황을 객관적으로 파악한다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",         "value": 0 },
+//     { "text": "그런 편이다",     "value": 1 },
+//     { "text": "매우 그렇다",     "value": 2 }
+//   ]
+// },
+// {
+//   "id": 71,
+//   "dimension": "TF",
+//   "question": "감정은 자주 변하지만 데이터나 사실은 변하지 않는다고 믿는다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",         "value": 0 },
+//     { "text": "그런 편이다",     "value": 1 },
+//     { "text": "매우 그렇다",     "value": 2 }
+//   ]
+// },
+// {
+//   "id": 72,
+//   "dimension": "TF",
+//   "question": "원칙과 규칙이 분명하면 감정적 갈등이 줄어든다고 느낀다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",         "value": 0 },
+//     { "text": "그런 편이다",     "value": 1 },
+//     { "text": "매우 그렇다",     "value": 2 }
+//   ]
+// },
+// {
+//   "id": 73,
+//   "dimension": "TF",
+//   "question": "개인 감정보다는 통계나 자료가 설득력이 있다고 본다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",         "value": 0 },
+//     { "text": "그런 편이다",     "value": 1 },
+//     { "text": "매우 그렇다",     "value": 2 }
+//   ]
+// },
+// {
+//   "id": 74,
+//   "dimension": "TF",
+//   "question": "상대방이 거절감을 느끼더라도 피드백을 즉시 전달하는 것을 선호한다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",         "value": 0 },
+//     { "text": "그런 편이다",     "value": 1 },
+//     { "text": "매우 그렇다",     "value": 2 }
+//   ]
+// },
+// {
+//   "id": 75,
+//   "dimension": "TF",
+//   "question": "합리적 판단이 사람들과의 감정적 공감보다 중요하다고 생각한다.",
+//   "options": [
+//     { "text": "전혀 그렇지 않다", "value": -2 },
+//     { "text": "그렇지 않은 편이다", "value": -1 },
+//     { "text": "보통이다",         "value": 0 },
+//     { "text": "그런 편이다",     "value": 1 },
+//     { "text": "매우 그렇다",     "value": 2 }
+//   ]
+// },
+{
   "id": 76,
   "dimension": "JP",
   "question": "주말이나 휴일 일정을 미리 계획해두지 않으면 불안하다.",
@@ -2137,13 +1900,14 @@ var Location = {
     select_5: Map.getLocationList("select_5")[0]
   }
 };
+var QuestionSize = Object.keys(MBTIQuestions_1.MBTIQuestions).length;
 Object.entries(Location.Selects).forEach(function (_a, index) {
   var key = _a[0],
     location = _a[1];
   //@ts-ignore
   App.addOnLocationEnter(key, function (player) {
     var questionNum = player.tag.questionNum;
-    if (questionNum < Object.keys(MBTIQuestions_1.MBTIQuestions).length) {
+    if (questionNum < QuestionSize) {
       player.tag.answers.push({
         id: questionNum,
         value: index - 2
@@ -2152,7 +1916,7 @@ Object.entries(Location.Selects).forEach(function (_a, index) {
       player.spawnAtLocation("start");
       player.tag.questionNum++;
       renderMbtiQuestion(player);
-      player.showCenterLabel("".concat(questionNum, "/100 \uC644\uB8CC"));
+      player.showCenterLabel("".concat(questionNum, "/").concat(QuestionSize, " \uC644\uB8CC"));
     } else {
       player.tag.mbti = calculateMBTI(player.tag.answers);
       player.title = player.tag.mbti;
@@ -2175,7 +1939,7 @@ App.onJoinPlayer.Add(function (player) {
     var player = App.getPlayerByID(playerId);
     if (!player) return;
     player.showCenterLabel("MBTI 테스트 준비 완료!");
-    player.moveSpeed = 120;
+    player.moveSpeed = 140;
     player.sendUpdated();
     renderMbtiQuestion(player);
     player.tag.init = true;

@@ -25,18 +25,20 @@ const Location: {
     }
 }
 
+const QuestionSize = Object.keys(MBTIQuestions).length;
+
 Object.entries(Location.Selects).forEach(([key, location], index) => {
     //@ts-ignore
     ScriptApp.addOnLocationEnter(key, (player: ScriptPlayer) => {
         const questionNum = player.tag.questionNum;
-        if (questionNum < Object.keys(MBTIQuestions).length) {
+        if (questionNum < QuestionSize) {
             player.tag.answers.push({ id: questionNum, value: index - 2 });
             // player.sendMessage(JSON.stringify(player.tag.answers));
             player.spawnAtLocation("start");
             player.tag.questionNum++;
             renderMbtiQuestion(player);
 
-            player.showCenterLabel(`${questionNum}/100 완료`);
+            player.showCenterLabel(`${questionNum}/${QuestionSize} 완료`);
         } else {
             player.tag.mbti = calculateMBTI(player.tag.answers);
             player.title = player.tag.mbti;
@@ -63,7 +65,7 @@ ScriptApp.onJoinPlayer.Add((player) => {
         const player = ScriptApp.getPlayerByID(playerId);
         if (!player) return;
         player.showCenterLabel("MBTI 테스트 준비 완료!");
-        player.moveSpeed = 120;
+        player.moveSpeed = 140;
         player.sendUpdated();
         renderMbtiQuestion(player);
         player.tag.init = true;
