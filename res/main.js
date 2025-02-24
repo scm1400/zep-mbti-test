@@ -1906,17 +1906,18 @@ Object.entries(Location.Selects).forEach(function (_a, index) {
     location = _a[1];
   //@ts-ignore
   App.addOnLocationEnter(key, function (player) {
-    var questionNum = player.tag.questionNum;
-    if (questionNum < QuestionSize && MBTIQuestions_1.MBTIQuestions[questionNum]) {
+    var questionCount = player.tag.questionNum;
+    var question = MBTIQuestions_1.MBTIQuestions[questionCount];
+    if (questionCount < QuestionSize && question) {
       player.tag.answers.push({
-        id: questionNum,
+        id: question.id,
         value: index - 2
       });
       // player.sendMessage(JSON.stringify(player.tag.answers));
       player.spawnAtLocation("start");
       player.tag.questionNum++;
       renderMbtiQuestion(player);
-      player.showCenterLabel("".concat(questionNum, "/").concat(QuestionSize, " \uC644\uB8CC"));
+      player.showCenterLabel("".concat(questionCount, "/").concat(QuestionSize, " \uC644\uB8CC"));
     } else {
       var mbtiInfo = calculateMBTI(player.tag.answers);
       player.tag.mbti = mbtiInfo.title;

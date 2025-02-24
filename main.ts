@@ -30,14 +30,15 @@ const QuestionSize = Object.keys(MBTIQuestions).length;
 Object.entries(Location.Selects).forEach(([key, location], index) => {
     //@ts-ignore
     ScriptApp.addOnLocationEnter(key, (player: ScriptPlayer) => {
-        const questionNum = player.tag.questionNum;
-        if (questionNum < QuestionSize && MBTIQuestions[questionNum]) {
-            player.tag.answers.push({ id: questionNum, value: index - 2 });
+        const questionCount = player.tag.questionNum;
+        const question = MBTIQuestions[questionCount];
+        if (questionCount < QuestionSize && question) {
+            player.tag.answers.push({ id: question.id, value: index - 2 });
             // player.sendMessage(JSON.stringify(player.tag.answers));
             player.spawnAtLocation("start");
             player.tag.questionNum++;
             renderMbtiQuestion(player);
-            player.showCenterLabel(`${questionNum}/${QuestionSize} 완료`);
+            player.showCenterLabel(`${questionCount}/${QuestionSize} 완료`);
         } else {
             const mbtiInfo = calculateMBTI(player.tag.answers);
             player.tag.mbti = mbtiInfo.title;
@@ -52,7 +53,6 @@ Object.entries(Location.Selects).forEach(([key, location], index) => {
             player.spawnAtLocation("complete");
             player.sendUpdated();
         }
-
     })
 })
 
