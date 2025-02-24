@@ -1918,8 +1918,16 @@ Object.entries(Location.Selects).forEach(function (_a, index) {
       renderMbtiQuestion(player);
       player.showCenterLabel("".concat(questionNum, "/").concat(QuestionSize, " \uC644\uB8CC"));
     } else {
-      player.tag.mbti = calculateMBTI(player.tag.answers);
+      var mbtiInfo = calculateMBTI(player.tag.answers);
+      player.tag.mbti = mbtiInfo.title;
       player.title = player.tag.mbti;
+      var resultString_1 = "";
+      Object.values(mbtiInfo.percentages).forEach(function (string, index) {
+        resultString_1 += string + "\n";
+      });
+      player.showAlert("MBTI 검사 결과", function () {}, {
+        content: resultString_1
+      });
       player.spawnAtLocation("complete");
       player.sendUpdated();
     }
@@ -2019,7 +2027,15 @@ function calculateMBTI(answers) {
   var sOrN = sScore >= nScore ? 'S' : 'N';
   var tOrF = tScore >= fScore ? 'T' : 'F';
   var jOrP = jScore >= pScore ? 'J' : 'P';
-  return "".concat(eOrI).concat(sOrN).concat(tOrF).concat(jOrP);
+  return {
+    title: "".concat(eOrI).concat(sOrN).concat(tOrF).concat(jOrP),
+    percentages: {
+      eOrI: eScore >= iScore ? "E (".concat(Math.floor(eScore / (eScore + iScore) * 100), ")") : "I (".concat(Math.floor(iScore / (eScore + iScore) * 100), ")"),
+      sOrN: sScore >= nScore ? "S (".concat(Math.floor(sScore / (sScore + nScore) * 100), ")") : "N (".concat(Math.floor(nScore / (sScore + nScore) * 100), ")"),
+      tOrF: tScore >= fScore ? "T (".concat(Math.floor(tScore / (tScore + fScore) * 100), ")") : "F (".concat(Math.floor(fScore / (tScore + fScore) * 100), ")"),
+      jOrP: jScore >= pScore ? "J (".concat(Math.floor(jScore / (jScore + pScore) * 100), ")") : "P (".concat(Math.floor(jScore / (jScore + pScore) * 100), ")")
+    }
+  };
 }
 })();
 

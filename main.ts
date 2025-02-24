@@ -40,8 +40,16 @@ Object.entries(Location.Selects).forEach(([key, location], index) => {
 
             player.showCenterLabel(`${questionNum}/${QuestionSize} 완료`);
         } else {
-            player.tag.mbti = calculateMBTI(player.tag.answers);
+            const mbtiInfo = calculateMBTI(player.tag.answers);
+            player.tag.mbti = mbtiInfo.title;
             player.title = player.tag.mbti;
+            let resultString = "";
+            Object.values(mbtiInfo.percentages).forEach((string, index,) => {
+                resultString += string + "\n";
+            })
+            player.showAlert("MBTI 검사 결과", () => { }, {
+                content: resultString
+            })
             player.spawnAtLocation("complete");
             player.sendUpdated();
         }
@@ -109,7 +117,7 @@ function renderMbtiQuestion(player: ScriptPlayer) {
 // 3) MBTI 유형 계산 함수
 function calculateMBTI(
     answers: MBTIAnswer[]
-): string {
+): { title: string, percentages: object } {
     // 각 축별 점수
     let eScore = 0, iScore = 0;
     let sScore = 0, nScore = 0;
@@ -157,5 +165,13 @@ function calculateMBTI(
     const tOrF = tScore >= fScore ? 'T' : 'F';
     const jOrP = jScore >= pScore ? 'J' : 'P';
 
-    return `${eOrI}${sOrN}${tOrF}${jOrP}`;
+    return {
+        title: `${eOrI}${sOrN}${tOrF}${jOrP}`,
+        percentages: {
+            eOrI: eScore >= iScore ? `E (${Math.floor(eScore / (eScore + iScore) * 100)})` : `I (${Math.floor(iScore / (eScore + iScore) * 100)})`,
+            sOrN: sScore >= nScore ? `S (${Math.floor(sScore / (sScore + nScore) * 100)})` : `N (${Math.floor(nScore / (sScore + nScore) * 100)})`,
+            tOrF: tScore >= fScore ? `T (${Math.floor(tScore / (tScore + fScore) * 100)})` : `F (${Math.floor(fScore / (tScore + fScore) * 100)})`,
+            jOrP: jScore >= pScore ? `J (${Math.floor(jScore / (jScore + pScore) * 100)})` : `P (${Math.floor(jScore / (jScore + pScore) * 100)})`,
+        }
+    };
 }
