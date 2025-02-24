@@ -70,7 +70,7 @@ export function createTextObject(
         }
     };
 
-    if (player.tag.init) {
+    if (!player.tag.init) {
         // @ts-ignore
         player.addPhaserGo(phaserGoOption);
         // @ts-ignore
