@@ -47,11 +47,23 @@ Object.entries(Location.Selects).forEach(([key, location], index) => {
             Object.values(mbtiInfo.percentages).forEach((string, index,) => {
                 resultString += string + "\n";
             })
-            player.showAlert("MBTI 검사 결과", () => { }, {
+            player.showAlert("MBTI 검사 결과", () => {
+                player.spawnAtMap("AlPRzo", "yBZAkk");
+            }, {
                 content: resultString
             })
             player.spawnAtLocation("complete");
             player.sendUpdated();
+
+            const data = {
+                id: player.id,
+                name: player.name,
+                mbtiString: player.tag.mbti,
+                mbtiPercentages: mbtiInfo.percentages,
+                updatedAt: new Date().toISOString(),
+            }
+            saveMbtiResult(player.id, data, () => { });
+
         }
     })
 })
@@ -79,6 +91,18 @@ ScriptApp.onJoinPlayer.Add((player) => {
     }, 1);
 
 });
+
+let _refreshDelay = 0;
+ScriptApp.onUpdate.Add((dt) => {
+    _refreshDelay += dt;
+    if (_refreshDelay > 10) {
+        ScriptApp.players.forEach((player) => {
+            if (player.away) {
+                player.spawnAtMap("AlPRzo", "yBZAkk");
+            }
+        })
+    }
+})
 
 function renderMbtiQuestion(player: ScriptPlayer) {
     const questionIndex = player.tag.questionNum - 1;
@@ -170,7 +194,54 @@ function calculateMBTI(
             eOrI: eScore >= iScore ? `E (${Math.floor(eScore / (eScore + iScore) * 100)})` : `I (${Math.floor(iScore / (eScore + iScore) * 100)})`,
             sOrN: sScore >= nScore ? `S (${Math.floor(sScore / (sScore + nScore) * 100)})` : `N (${Math.floor(nScore / (sScore + nScore) * 100)})`,
             tOrF: tScore >= fScore ? `T (${Math.floor(tScore / (tScore + fScore) * 100)})` : `F (${Math.floor(fScore / (tScore + fScore) * 100)})`,
-            jOrP: jScore >= pScore ? `J (${Math.floor(jScore / (jScore + pScore) * 100)})` : `P (${Math.floor(jScore / (jScore + pScore) * 100)})`,
+            jOrP: jScore >= pScore ? `J (${Math.floor(jScore / (jScore + pScore) * 100)})` : `P (${Math.floor(pScore / (jScore + pScore) * 100)})`,
         }
     };
+}
+
+class RequestOptions {
+    key?: string;
+    sortAttr?: string;
+    sortOrder?: string;
+    limit?: number;
+    page?: number | 'count';
+    searchAttr?: string;
+    searchValue?: string;
+
+    constructor() {
+    }
+}
+
+function saveMbtiResult(key: string, data, callback) {
+    const AWS_API = 'https://jstvymmti6.execute-api.ap-northeast-2.amazonaws.com/liveAppDBRequest';
+    const CollectionName = "MBTI_RESULT";
+
+    let saveObject = { ...data, collection: CollectionName, key: key };
+
+    ScriptApp.httpPostJson(AWS_API, null, saveObject, res => {
+        if (res.startsWith('success', 1)) {
+            callback(true);
+        } else {
+            callback(false);
+        }
+    });
+}
+
+function getMbtiResult(player) {
+    const AWS_API = 'https://jstvymmti6.execute-api.ap-northeast-2.amazonaws.com/liveAppDBRequest';
+    const CollectionName = "MBTI_RESULT";
+    let requestURL = `${AWS_API}?collection=${CollectionName}&key=${player.id}`;
+
+    const playerId = player.id;
+    // App.sayToAll(`[httpGet] requestURL = ${requestURL}`)
+    ScriptApp.httpGet(requestURL, null, res => {
+        const player = ScriptApp.getPlayerByID(playerId);
+        if (!player) return;
+        const response = JSON.parse(res);
+        if (response) {
+            if (response.mbtiString) {
+
+            }
+        }
+    })
 }

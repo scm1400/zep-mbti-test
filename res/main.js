@@ -2,6 +2,239 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 498:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+      for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+    }
+    return t;
+  };
+  return __assign.apply(this, arguments);
+};
+Object.defineProperty(exports, "__esModule", ({
+  value: true
+}));
+var MBTIQuestions_1 = __webpack_require__(515);
+var Utillity_1 = __webpack_require__(896);
+var Location = {
+  MainScreen: Map.getLocationList("screen_main")[0],
+  SubScreens: {
+    screen_sub_1: Map.getLocationList("screen_sub_1")[0],
+    screen_sub_2: Map.getLocationList("screen_sub_2")[0],
+    screen_sub_3: Map.getLocationList("screen_sub_3")[0],
+    screen_sub_4: Map.getLocationList("screen_sub_4")[0],
+    screen_sub_5: Map.getLocationList("screen_sub_5")[0]
+  },
+  Selects: {
+    select_1: Map.getLocationList("select_1")[0],
+    select_2: Map.getLocationList("select_2")[0],
+    select_3: Map.getLocationList("select_3")[0],
+    select_4: Map.getLocationList("select_4")[0],
+    select_5: Map.getLocationList("select_5")[0]
+  }
+};
+var QuestionSize = Object.keys(MBTIQuestions_1.MBTIQuestions).length;
+Object.entries(Location.Selects).forEach(function (_a, index) {
+  var key = _a[0],
+    location = _a[1];
+  //@ts-ignore
+  App.addOnLocationEnter(key, function (player) {
+    var questionCount = player.tag.questionNum;
+    var question = MBTIQuestions_1.MBTIQuestions[questionCount];
+    if (questionCount < QuestionSize && question) {
+      player.tag.answers.push({
+        id: question.id,
+        value: index - 2
+      });
+      // player.sendMessage(JSON.stringify(player.tag.answers));
+      player.spawnAtLocation("start");
+      player.tag.questionNum++;
+      renderMbtiQuestion(player);
+      player.showCenterLabel("".concat(questionCount, "/").concat(QuestionSize, " \uC644\uB8CC"));
+    } else {
+      var mbtiInfo = calculateMBTI(player.tag.answers);
+      player.tag.mbti = mbtiInfo.title;
+      player.title = player.tag.mbti;
+      var resultString_1 = "";
+      Object.values(mbtiInfo.percentages).forEach(function (string, index) {
+        resultString_1 += string + "\n";
+      });
+      player.showAlert("MBTI 검사 결과", function () {
+        player.spawnAtMap("AlPRzo", "yBZAkk");
+      }, {
+        content: resultString_1
+      });
+      player.spawnAtLocation("complete");
+      player.sendUpdated();
+      var data = {
+        id: player.id,
+        name: player.name,
+        mbtiString: player.tag.mbti,
+        mbtiPercentages: mbtiInfo.percentages,
+        updatedAt: new Date().toISOString()
+      };
+      saveMbtiResult(player.id, data, function () {});
+    }
+  });
+});
+App.onJoinPlayer.Add(function (player) {
+  player.tag = {};
+  player.tag.questionNum = 1;
+  player.tag.answers = [];
+  player.moveSpeed = 0;
+  player.displayRatio = 1.25;
+  player.enableFreeView = false;
+  player.showCenterLabel("MBTI 테스트 준비중...");
+  player.sendUpdated();
+  var playerId = player.id;
+  App.runLater(function () {
+    var player = App.getPlayerByID(playerId);
+    if (!player) return;
+    player.showCenterLabel("MBTI 테스트 준비 완료!");
+    player.moveSpeed = 140;
+    player.sendUpdated();
+    renderMbtiQuestion(player);
+    player.tag.init = true;
+  }, 1);
+});
+var _refreshDelay = 0;
+App.onUpdate.Add(function (dt) {
+  _refreshDelay += dt;
+  if (_refreshDelay > 10) {
+    App.players.forEach(function (player) {
+      if (player.away) {
+        player.spawnAtMap("AlPRzo", "yBZAkk");
+      }
+    });
+  }
+});
+function renderMbtiQuestion(player) {
+  var questionIndex = player.tag.questionNum - 1;
+  var mbtiQuestion = MBTIQuestions_1.MBTIQuestions[questionIndex];
+  (0, Utillity_1.createTextObject)(player, mbtiQuestion.question, Location.MainScreen.x, Location.MainScreen.y, {
+    color: "white",
+    fontSize: "20px",
+    wordWrap: {
+      useAdvancedWrap: true,
+      width: Location.MainScreen.width * 32
+    },
+    fixedWidth: Location.MainScreen.width * 32,
+    align: "center"
+  });
+  Object.values(Location.SubScreens).forEach(function (locationInfo, index) {
+    var optionText = mbtiQuestion.options[index].text;
+    (0, Utillity_1.createTextObject)(player, optionText, locationInfo.x, locationInfo.y, {
+      color: "white",
+      fontSize: "14px",
+      wordWrap: {
+        useAdvancedWrap: true,
+        width: locationInfo.width * 32
+      },
+      fixedWidth: locationInfo.width * 32,
+      align: "center"
+    });
+  });
+}
+// 3) MBTI 유형 계산 함수
+function calculateMBTI(answers) {
+  // 각 축별 점수
+  var eScore = 0,
+    iScore = 0;
+  var sScore = 0,
+    nScore = 0;
+  var tScore = 0,
+    fScore = 0;
+  var jScore = 0,
+    pScore = 0;
+  var _loop_1 = function (answer) {
+    // answer.id에 해당하는 question을 찾음
+    var question = MBTIQuestions_1.MBTIQuestions.find(function (q) {
+      return q.id === answer.id;
+    });
+    if (!question) return "continue";
+    var dimension = question.dimension;
+    var value = answer.value;
+    switch (dimension) {
+      case 'EI':
+        // value가 0 이상 → E, 0 미만 → I
+        if (value >= 0) eScore += value;else iScore += Math.abs(value);
+        break;
+      case 'SN':
+        // value가 0 이상 → S, 0 미만 → N
+        if (value >= 0) sScore += value;else nScore += Math.abs(value);
+        break;
+      case 'TF':
+        // value가 0 이상 → T, 0 미만 → F
+        if (value >= 0) tScore += value;else fScore += Math.abs(value);
+        break;
+      case 'JP':
+        // value가 0 이상 → J, 0 미만 → P
+        if (value >= 0) jScore += value;else pScore += Math.abs(value);
+        break;
+    }
+  };
+  for (var _i = 0, answers_1 = answers; _i < answers_1.length; _i++) {
+    var answer = answers_1[_i];
+    _loop_1(answer);
+  }
+  // EI, SN, TF, JP 각각 비교
+  var eOrI = eScore >= iScore ? 'E' : 'I';
+  var sOrN = sScore >= nScore ? 'S' : 'N';
+  var tOrF = tScore >= fScore ? 'T' : 'F';
+  var jOrP = jScore >= pScore ? 'J' : 'P';
+  return {
+    title: "".concat(eOrI).concat(sOrN).concat(tOrF).concat(jOrP),
+    percentages: {
+      eOrI: eScore >= iScore ? "E (".concat(Math.floor(eScore / (eScore + iScore) * 100), ")") : "I (".concat(Math.floor(iScore / (eScore + iScore) * 100), ")"),
+      sOrN: sScore >= nScore ? "S (".concat(Math.floor(sScore / (sScore + nScore) * 100), ")") : "N (".concat(Math.floor(nScore / (sScore + nScore) * 100), ")"),
+      tOrF: tScore >= fScore ? "T (".concat(Math.floor(tScore / (tScore + fScore) * 100), ")") : "F (".concat(Math.floor(fScore / (tScore + fScore) * 100), ")"),
+      jOrP: jScore >= pScore ? "J (".concat(Math.floor(jScore / (jScore + pScore) * 100), ")") : "P (".concat(Math.floor(pScore / (jScore + pScore) * 100), ")")
+    }
+  };
+}
+var RequestOptions = /** @class */function () {
+  function RequestOptions() {}
+  return RequestOptions;
+}();
+function saveMbtiResult(key, data, callback) {
+  var AWS_API = 'https://jstvymmti6.execute-api.ap-northeast-2.amazonaws.com/liveAppDBRequest';
+  var CollectionName = "MBTI_RESULT";
+  var saveObject = __assign(__assign({}, data), {
+    collection: CollectionName,
+    key: key
+  });
+  App.httpPostJson(AWS_API, null, saveObject, function (res) {
+    if (res.startsWith('success', 1)) {
+      callback(true);
+    } else {
+      callback(false);
+    }
+  });
+}
+function getMbtiResult(player) {
+  var AWS_API = 'https://jstvymmti6.execute-api.ap-northeast-2.amazonaws.com/liveAppDBRequest';
+  var CollectionName = "MBTI_RESULT";
+  var requestURL = "".concat(AWS_API, "?collection=").concat(CollectionName, "&key=").concat(player.id);
+  var playerId = player.id;
+  // App.sayToAll(`[httpGet] requestURL = ${requestURL}`)
+  App.httpGet(requestURL, null, function (res) {
+    var player = App.getPlayerByID(playerId);
+    if (!player) return;
+    var response = JSON.parse(res);
+    if (response) {
+      if (response.mbtiString) {}
+    }
+  });
+}
+
+/***/ }),
+
 /***/ 515:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -1295,26 +1528,6 @@ exports.MBTIQuestions = [{
     "value": 2
   }]
 }, {
-  "id": 77,
-  "dimension": "JP",
-  "question": "실행 순서나 스케줄이 확실해야 업무에 집중이 잘 된다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
   "id": 78,
   "dimension": "JP",
   "question": "모임을 계획할 때 세부 일정을 미리 확정하고 싶다.",
@@ -1395,129 +1608,9 @@ exports.MBTIQuestions = [{
     "value": 2
   }]
 }, {
-  "id": 82,
-  "dimension": "JP",
-  "question": "일을 시작하기 전에 끝까지의 과정을 구상해야 안심이 된다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 83,
-  "dimension": "JP",
-  "question": "집안 정리나 사무실 정리는 체계적으로 구분되어 있는 게 좋다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 84,
-  "dimension": "JP",
-  "question": "데드라인이 있다면 미리 준비해서 시간을 엄수하는 편이다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 85,
-  "dimension": "JP",
-  "question": "갑작스러운 일정 변경이나 요청은 당황스럽게 느껴진다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 86,
-  "dimension": "JP",
-  "question": "계획대로 진행되지 않으면 즉시 원인 분석과 재조정을 시도한다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
   "id": 87,
   "dimension": "JP",
   "question": "규칙과 절차를 준수해야 일관성 있게 진행된다고 믿는다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 88,
-  "dimension": "JP",
-  "question": "일을 시작하기 전 필요한 자료와 정보를 충분히 준비해둔다.",
   "options": [{
     "text": "전혀 그렇지 않다",
     "value": -2
@@ -1615,26 +1708,6 @@ exports.MBTIQuestions = [{
     "value": 2
   }]
 }, {
-  "id": 93,
-  "dimension": "JP",
-  "question": "새로운 방식의 즉흥적 시도보다는 익숙한 프로세스를 고수한다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
   "id": 94,
   "dimension": "JP",
   "question": "물건이 제자리에 있지 않으면 신경이 쓰이는 편이다.",
@@ -1695,49 +1768,9 @@ exports.MBTIQuestions = [{
     "value": 2
   }]
 }, {
-  "id": 97,
-  "dimension": "JP",
-  "question": "마감이 없어도 스스로 기한을 정하고 지키려고 한다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
   "id": 98,
   "dimension": "JP",
   "question": "대부분의 상황에서 철저한 계획이 실패를 줄인다고 생각한다.",
-  "options": [{
-    "text": "전혀 그렇지 않다",
-    "value": -2
-  }, {
-    "text": "그렇지 않은 편이다",
-    "value": -1
-  }, {
-    "text": "보통이다",
-    "value": 0
-  }, {
-    "text": "그런 편이다",
-    "value": 1
-  }, {
-    "text": "매우 그렇다",
-    "value": 2
-  }]
-}, {
-  "id": 99,
-  "dimension": "JP",
-  "question": "예상치 못한 상황에 즉흥적으로 대응하기보다는, 유사 상황 대비가 필요하다.",
   "options": [{
     "text": "전혀 그렇지 않다",
     "value": -2
@@ -1871,174 +1904,11 @@ function createTextObject(player, text, x, y, textStyle) {
 /******/ 	}
 /******/ 	
 /************************************************************************/
-var __webpack_exports__ = {};
-// This entry needs to be wrapped in an IIFE because it uses a non-standard name for the exports (exports).
-(() => {
-var exports = __webpack_exports__;
-var __webpack_unused_export__;
-
-
-__webpack_unused_export__ = ({
-  value: true
-});
-var MBTIQuestions_1 = __webpack_require__(515);
-var Utillity_1 = __webpack_require__(896);
-var Location = {
-  MainScreen: Map.getLocationList("screen_main")[0],
-  SubScreens: {
-    screen_sub_1: Map.getLocationList("screen_sub_1")[0],
-    screen_sub_2: Map.getLocationList("screen_sub_2")[0],
-    screen_sub_3: Map.getLocationList("screen_sub_3")[0],
-    screen_sub_4: Map.getLocationList("screen_sub_4")[0],
-    screen_sub_5: Map.getLocationList("screen_sub_5")[0]
-  },
-  Selects: {
-    select_1: Map.getLocationList("select_1")[0],
-    select_2: Map.getLocationList("select_2")[0],
-    select_3: Map.getLocationList("select_3")[0],
-    select_4: Map.getLocationList("select_4")[0],
-    select_5: Map.getLocationList("select_5")[0]
-  }
-};
-var QuestionSize = Object.keys(MBTIQuestions_1.MBTIQuestions).length;
-Object.entries(Location.Selects).forEach(function (_a, index) {
-  var key = _a[0],
-    location = _a[1];
-  //@ts-ignore
-  App.addOnLocationEnter(key, function (player) {
-    var questionCount = player.tag.questionNum;
-    var question = MBTIQuestions_1.MBTIQuestions[questionCount];
-    if (questionCount < QuestionSize && question) {
-      player.tag.answers.push({
-        id: question.id,
-        value: index - 2
-      });
-      // player.sendMessage(JSON.stringify(player.tag.answers));
-      player.spawnAtLocation("start");
-      player.tag.questionNum++;
-      renderMbtiQuestion(player);
-      player.showCenterLabel("".concat(questionCount, "/").concat(QuestionSize, " \uC644\uB8CC"));
-    } else {
-      var mbtiInfo = calculateMBTI(player.tag.answers);
-      player.tag.mbti = mbtiInfo.title;
-      player.title = player.tag.mbti;
-      var resultString_1 = "";
-      Object.values(mbtiInfo.percentages).forEach(function (string, index) {
-        resultString_1 += string + "\n";
-      });
-      player.showAlert("MBTI 검사 결과", function () {}, {
-        content: resultString_1
-      });
-      player.spawnAtLocation("complete");
-      player.sendUpdated();
-    }
-  });
-});
-App.onJoinPlayer.Add(function (player) {
-  player.tag = {};
-  player.tag.questionNum = 1;
-  player.tag.answers = [];
-  player.moveSpeed = 0;
-  player.displayRatio = 1.25;
-  player.enableFreeView = false;
-  player.showCenterLabel("MBTI 테스트 준비중...");
-  player.sendUpdated();
-  var playerId = player.id;
-  App.runLater(function () {
-    var player = App.getPlayerByID(playerId);
-    if (!player) return;
-    player.showCenterLabel("MBTI 테스트 준비 완료!");
-    player.moveSpeed = 140;
-    player.sendUpdated();
-    renderMbtiQuestion(player);
-    player.tag.init = true;
-  }, 1);
-});
-function renderMbtiQuestion(player) {
-  var questionIndex = player.tag.questionNum - 1;
-  var mbtiQuestion = MBTIQuestions_1.MBTIQuestions[questionIndex];
-  (0, Utillity_1.createTextObject)(player, mbtiQuestion.question, Location.MainScreen.x, Location.MainScreen.y, {
-    color: "white",
-    fontSize: "20px",
-    wordWrap: {
-      useAdvancedWrap: true,
-      width: Location.MainScreen.width * 32
-    },
-    fixedWidth: Location.MainScreen.width * 32,
-    align: "center"
-  });
-  Object.values(Location.SubScreens).forEach(function (locationInfo, index) {
-    var optionText = mbtiQuestion.options[index].text;
-    (0, Utillity_1.createTextObject)(player, optionText, locationInfo.x, locationInfo.y, {
-      color: "white",
-      fontSize: "14px",
-      wordWrap: {
-        useAdvancedWrap: true,
-        width: locationInfo.width * 32
-      },
-      fixedWidth: locationInfo.width * 32,
-      align: "center"
-    });
-  });
-}
-// 3) MBTI 유형 계산 함수
-function calculateMBTI(answers) {
-  // 각 축별 점수
-  var eScore = 0,
-    iScore = 0;
-  var sScore = 0,
-    nScore = 0;
-  var tScore = 0,
-    fScore = 0;
-  var jScore = 0,
-    pScore = 0;
-  var _loop_1 = function (answer) {
-    // answer.id에 해당하는 question을 찾음
-    var question = MBTIQuestions_1.MBTIQuestions.find(function (q) {
-      return q.id === answer.id;
-    });
-    if (!question) return "continue";
-    var dimension = question.dimension;
-    var value = answer.value;
-    switch (dimension) {
-      case 'EI':
-        // value가 0 이상 → E, 0 미만 → I
-        if (value >= 0) eScore += value;else iScore += Math.abs(value);
-        break;
-      case 'SN':
-        // value가 0 이상 → S, 0 미만 → N
-        if (value >= 0) sScore += value;else nScore += Math.abs(value);
-        break;
-      case 'TF':
-        // value가 0 이상 → T, 0 미만 → F
-        if (value >= 0) tScore += value;else fScore += Math.abs(value);
-        break;
-      case 'JP':
-        // value가 0 이상 → J, 0 미만 → P
-        if (value >= 0) jScore += value;else pScore += Math.abs(value);
-        break;
-    }
-  };
-  for (var _i = 0, answers_1 = answers; _i < answers_1.length; _i++) {
-    var answer = answers_1[_i];
-    _loop_1(answer);
-  }
-  // EI, SN, TF, JP 각각 비교
-  var eOrI = eScore >= iScore ? 'E' : 'I';
-  var sOrN = sScore >= nScore ? 'S' : 'N';
-  var tOrF = tScore >= fScore ? 'T' : 'F';
-  var jOrP = jScore >= pScore ? 'J' : 'P';
-  return {
-    title: "".concat(eOrI).concat(sOrN).concat(tOrF).concat(jOrP),
-    percentages: {
-      eOrI: eScore >= iScore ? "E (".concat(Math.floor(eScore / (eScore + iScore) * 100), ")") : "I (".concat(Math.floor(iScore / (eScore + iScore) * 100), ")"),
-      sOrN: sScore >= nScore ? "S (".concat(Math.floor(sScore / (sScore + nScore) * 100), ")") : "N (".concat(Math.floor(nScore / (sScore + nScore) * 100), ")"),
-      tOrF: tScore >= fScore ? "T (".concat(Math.floor(tScore / (tScore + fScore) * 100), ")") : "F (".concat(Math.floor(fScore / (tScore + fScore) * 100), ")"),
-      jOrP: jScore >= pScore ? "J (".concat(Math.floor(jScore / (jScore + pScore) * 100), ")") : "P (".concat(Math.floor(jScore / (jScore + pScore) * 100), ")")
-    }
-  };
-}
-})();
-
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__(498);
+/******/ 	
 /******/ })()
 ;

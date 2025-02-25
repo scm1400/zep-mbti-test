@@ -935,18 +935,6 @@ export const MBTIQuestions: MBTIQuestion[] = [
     ]
   },
   {
-    "id": 77,
-    "dimension": "JP",
-    "question": "실행 순서나 스케줄이 확실해야 업무에 집중이 잘 된다.",
-    "options": [
-      { "text": "전혀 그렇지 않다", "value": -2 },
-      { "text": "그렇지 않은 편이다", "value": -1 },
-      { "text": "보통이다", "value": 0 },
-      { "text": "그런 편이다", "value": 1 },
-      { "text": "매우 그렇다", "value": 2 }
-    ]
-  },
-  {
     "id": 78,
     "dimension": "JP",
     "question": "모임을 계획할 때 세부 일정을 미리 확정하고 싶다.",
@@ -995,81 +983,9 @@ export const MBTIQuestions: MBTIQuestion[] = [
     ]
   },
   {
-    "id": 82,
-    "dimension": "JP",
-    "question": "일을 시작하기 전에 끝까지의 과정을 구상해야 안심이 된다.",
-    "options": [
-      { "text": "전혀 그렇지 않다", "value": -2 },
-      { "text": "그렇지 않은 편이다", "value": -1 },
-      { "text": "보통이다", "value": 0 },
-      { "text": "그런 편이다", "value": 1 },
-      { "text": "매우 그렇다", "value": 2 }
-    ]
-  },
-  {
-    "id": 83,
-    "dimension": "JP",
-    "question": "집안 정리나 사무실 정리는 체계적으로 구분되어 있는 게 좋다.",
-    "options": [
-      { "text": "전혀 그렇지 않다", "value": -2 },
-      { "text": "그렇지 않은 편이다", "value": -1 },
-      { "text": "보통이다", "value": 0 },
-      { "text": "그런 편이다", "value": 1 },
-      { "text": "매우 그렇다", "value": 2 }
-    ]
-  },
-  {
-    "id": 84,
-    "dimension": "JP",
-    "question": "데드라인이 있다면 미리 준비해서 시간을 엄수하는 편이다.",
-    "options": [
-      { "text": "전혀 그렇지 않다", "value": -2 },
-      { "text": "그렇지 않은 편이다", "value": -1 },
-      { "text": "보통이다", "value": 0 },
-      { "text": "그런 편이다", "value": 1 },
-      { "text": "매우 그렇다", "value": 2 }
-    ]
-  },
-  {
-    "id": 85,
-    "dimension": "JP",
-    "question": "갑작스러운 일정 변경이나 요청은 당황스럽게 느껴진다.",
-    "options": [
-      { "text": "전혀 그렇지 않다", "value": -2 },
-      { "text": "그렇지 않은 편이다", "value": -1 },
-      { "text": "보통이다", "value": 0 },
-      { "text": "그런 편이다", "value": 1 },
-      { "text": "매우 그렇다", "value": 2 }
-    ]
-  },
-  {
-    "id": 86,
-    "dimension": "JP",
-    "question": "계획대로 진행되지 않으면 즉시 원인 분석과 재조정을 시도한다.",
-    "options": [
-      { "text": "전혀 그렇지 않다", "value": -2 },
-      { "text": "그렇지 않은 편이다", "value": -1 },
-      { "text": "보통이다", "value": 0 },
-      { "text": "그런 편이다", "value": 1 },
-      { "text": "매우 그렇다", "value": 2 }
-    ]
-  },
-  {
     "id": 87,
     "dimension": "JP",
     "question": "규칙과 절차를 준수해야 일관성 있게 진행된다고 믿는다.",
-    "options": [
-      { "text": "전혀 그렇지 않다", "value": -2 },
-      { "text": "그렇지 않은 편이다", "value": -1 },
-      { "text": "보통이다", "value": 0 },
-      { "text": "그런 편이다", "value": 1 },
-      { "text": "매우 그렇다", "value": 2 }
-    ]
-  },
-  {
-    "id": 88,
-    "dimension": "JP",
-    "question": "일을 시작하기 전 필요한 자료와 정보를 충분히 준비해둔다.",
     "options": [
       { "text": "전혀 그렇지 않다", "value": -2 },
       { "text": "그렇지 않은 편이다", "value": -1 },
@@ -1127,18 +1043,6 @@ export const MBTIQuestions: MBTIQuestion[] = [
     ]
   },
   {
-    "id": 93,
-    "dimension": "JP",
-    "question": "새로운 방식의 즉흥적 시도보다는 익숙한 프로세스를 고수한다.",
-    "options": [
-      { "text": "전혀 그렇지 않다", "value": -2 },
-      { "text": "그렇지 않은 편이다", "value": -1 },
-      { "text": "보통이다",         "value": 0 },
-      { "text": "그런 편이다",     "value": 1 },
-      { "text": "매우 그렇다",     "value": 2 }
-    ]
-  },
-  {
     "id": 94,
     "dimension": "JP",
     "question": "물건이 제자리에 있지 않으면 신경이 쓰이는 편이다.",
@@ -1175,33 +1079,9 @@ export const MBTIQuestions: MBTIQuestion[] = [
     ]
   },
   {
-    "id": 97,
-    "dimension": "JP",
-    "question": "마감이 없어도 스스로 기한을 정하고 지키려고 한다.",
-    "options": [
-      { "text": "전혀 그렇지 않다", "value": -2 },
-      { "text": "그렇지 않은 편이다", "value": -1 },
-      { "text": "보통이다",         "value": 0 },
-      { "text": "그런 편이다",     "value": 1 },
-      { "text": "매우 그렇다",     "value": 2 }
-    ]
-  },
-  {
     "id": 98,
     "dimension": "JP",
     "question": "대부분의 상황에서 철저한 계획이 실패를 줄인다고 생각한다.",
-    "options": [
-      { "text": "전혀 그렇지 않다", "value": -2 },
-      { "text": "그렇지 않은 편이다", "value": -1 },
-      { "text": "보통이다",         "value": 0 },
-      { "text": "그런 편이다",     "value": 1 },
-      { "text": "매우 그렇다",     "value": 2 }
-    ]
-  },
-  {
-    "id": 99,
-    "dimension": "JP",
-    "question": "예상치 못한 상황에 즉흥적으로 대응하기보다는, 유사 상황 대비가 필요하다.",
     "options": [
       { "text": "전혀 그렇지 않다", "value": -2 },
       { "text": "그렇지 않은 편이다", "value": -1 },
