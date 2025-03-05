@@ -93,6 +93,16 @@ const cameraPosition = ScriptMap.getLocation("camera");
 
 ScriptApp.onJoinPlayer.Add((player) => {
     player.tag = {};
+    player.tag.systemWidegt = player.showWidget("system.html", "topleft", 0, 0);
+
+    if (player.isGuest) {
+        player.moveSpeed = 0;
+        player.sendUpdated();
+        showLoginRequiredPopup(player);
+
+        loginRequired(player);
+        return;
+    }
 
     player.tag.questionNum = 1;
     player.tag.answers = [];
@@ -279,4 +289,22 @@ function getMbtiResult(player) {
             }
         }
     })
+}
+
+function showLoginRequiredPopup(player: ScriptPlayer) {
+    player.showAlert("로그인이 필요합니다.", (res) => {
+        showLoginRequiredPopup(player);
+        loginRequired(player);
+    }, {
+        content: "MBTI 테스트를 위해 로그인이 필요합니다."
+    })
+}
+
+function loginRequired(player) {
+    if (player.tag.systemWidegt) {
+        player.tag.systemWidegt.sendMessage({
+            type: "loginRequired",
+        });
+    }
+    return;
 }
