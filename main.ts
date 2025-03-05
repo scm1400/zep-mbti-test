@@ -62,6 +62,8 @@ Object.entries(Location.Selects).forEach(([key, location], index) => {
             const mbtiInfo = calculateMBTI(player.tag.answers);
             player.tag.mbti = mbtiInfo.title;
             player.title = player.tag.mbti;
+            //@ts-ignore
+            player.setCustomEffectSprite(2, MBTI_SPRITES[mbtiInfo.title], 0, 13, 1);
             let resultString = "";
             Object.values(mbtiInfo.percentages).forEach((string, index,) => {
                 resultString += string + "\n";

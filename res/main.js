@@ -79,6 +79,8 @@ Object.entries(Location.Selects).forEach(function (_a, index) {
       var mbtiInfo = calculateMBTI(player.tag.answers);
       player.tag.mbti = mbtiInfo.title;
       player.title = player.tag.mbti;
+      //@ts-ignore
+      player.setCustomEffectSprite(2, MBTI_SPRITES[mbtiInfo.title], 0, 13, 1);
       var resultString_1 = "";
       Object.values(mbtiInfo.percentages).forEach(function (string, index) {
         resultString_1 += string + "\n";
