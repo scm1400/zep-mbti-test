@@ -1,6 +1,25 @@
 import { LocationInfo, ScriptPlayer } from "zep-script";
-import { MBTIAnswer, MBTIQuestion, MBTIQuestions } from "./src/MBTIQuestions";
+import { MBTIAnswer, MBTIQuestions } from "./src/MBTIQuestions";
 import { createTextObject } from "./src/Utillity";
+
+const MBTI_SPRITES = {
+    ISTJ: ScriptApp.loadSpritesheet("mbti/ISTJ.png"),
+    ISFJ: ScriptApp.loadSpritesheet("mbti/ISFJ.png"),
+    INFJ: ScriptApp.loadSpritesheet("mbti/INFJ.png"),
+    INTJ: ScriptApp.loadSpritesheet("mbti/INTJ.png"),
+    ISTP: ScriptApp.loadSpritesheet("mbti/ISTP.png"),
+    ISFP: ScriptApp.loadSpritesheet("mbti/ISFP.png"),
+    INFP: ScriptApp.loadSpritesheet("mbti/INFP.png"),
+    INTP: ScriptApp.loadSpritesheet("mbti/INTP.png"),
+    ESTP: ScriptApp.loadSpritesheet("mbti/ESTP.png"),
+    ESFP: ScriptApp.loadSpritesheet("mbti/ESFP.png"),
+    ENFP: ScriptApp.loadSpritesheet("mbti/ENFP.png"),
+    ENTP: ScriptApp.loadSpritesheet("mbti/ENTP.png"),
+    ESTJ: ScriptApp.loadSpritesheet("mbti/ESTJ.png"),
+    ESFJ: ScriptApp.loadSpritesheet("mbti/ESFJ.png"),
+    ENFJ: ScriptApp.loadSpritesheet("mbti/ENFJ.png"),
+    ENTJ: ScriptApp.loadSpritesheet("mbti/ENTJ.png"),
+}
 
 const Location: {
     MainScreen: LocationInfo,
@@ -38,7 +57,7 @@ Object.entries(Location.Selects).forEach(([key, location], index) => {
             player.spawnAtLocation("start");
             player.tag.questionNum++;
             renderMbtiQuestion(player);
-            player.showCenterLabel(`${questionCount}/${QuestionSize} 완료`);
+            player.showCenterLabel(`${questionCount}/${QuestionSize} 완료`, 0xffffff, 0x00000, 0);
         } else {
             const mbtiInfo = calculateMBTI(player.tag.answers);
             player.tag.mbti = mbtiInfo.title;
@@ -68,28 +87,39 @@ Object.entries(Location.Selects).forEach(([key, location], index) => {
     })
 })
 
+const cameraPosition = ScriptMap.getLocation("camera");
+
 ScriptApp.onJoinPlayer.Add((player) => {
     player.tag = {};
 
     player.tag.questionNum = 1;
     player.tag.answers = [];
     player.moveSpeed = 0;
-    player.displayRatio = 1.25;
+    if (!player.isMobile) {
+        player.displayRatio = 1;
+        if (cameraPosition) {
+            player.setCameraTarget(cameraPosition.x, cameraPosition.y, 0);
+        }
+    } else {
+        player.displayRatio = 0.8;
+    }
     player.enableFreeView = false;
-    player.showCenterLabel("MBTI 테스트 준비중...");
+
+    player.showCenterLabel("MBTI 테스트 준비중...", 0xffffff, 0x00000, 200);
     player.sendUpdated();
 
     const playerId = player.id;
     ScriptApp.runLater(() => {
         const player = ScriptApp.getPlayerByID(playerId);
         if (!player) return;
-        player.showCenterLabel("MBTI 테스트 준비 완료!");
+        player.showCenterLabel("MBTI 테스트 준비 완료!", 0xffffff, 0x00000, 200);
         player.moveSpeed = 140;
         player.sendUpdated();
         renderMbtiQuestion(player);
         player.tag.init = true;
     }, 1);
 
+    getMbtiResult(player);
 });
 
 let _refreshDelay = 0;
@@ -227,6 +257,7 @@ function saveMbtiResult(key: string, data, callback) {
     });
 }
 
+
 function getMbtiResult(player) {
     const AWS_API = 'https://jstvymmti6.execute-api.ap-northeast-2.amazonaws.com/liveAppDBRequest';
     const CollectionName = "MBTI_RESULT";
@@ -240,7 +271,9 @@ function getMbtiResult(player) {
         const response = JSON.parse(res);
         if (response) {
             if (response.mbtiString) {
-
+                //@ts-ignore
+                player.setCustomEffectSprite(2, MBTI_SPRITES[response.mbtiString], 0, 13, 1);
+                player.sendUpdated();
             }
         }
     })

@@ -22,6 +22,24 @@ Object.defineProperty(exports, "__esModule", ({
 }));
 var MBTIQuestions_1 = __webpack_require__(515);
 var Utillity_1 = __webpack_require__(896);
+var MBTI_SPRITES = {
+  ISTJ: App.loadSpritesheet("mbti/ISTJ.png"),
+  ISFJ: App.loadSpritesheet("mbti/ISFJ.png"),
+  INFJ: App.loadSpritesheet("mbti/INFJ.png"),
+  INTJ: App.loadSpritesheet("mbti/INTJ.png"),
+  ISTP: App.loadSpritesheet("mbti/ISTP.png"),
+  ISFP: App.loadSpritesheet("mbti/ISFP.png"),
+  INFP: App.loadSpritesheet("mbti/INFP.png"),
+  INTP: App.loadSpritesheet("mbti/INTP.png"),
+  ESTP: App.loadSpritesheet("mbti/ESTP.png"),
+  ESFP: App.loadSpritesheet("mbti/ESFP.png"),
+  ENFP: App.loadSpritesheet("mbti/ENFP.png"),
+  ENTP: App.loadSpritesheet("mbti/ENTP.png"),
+  ESTJ: App.loadSpritesheet("mbti/ESTJ.png"),
+  ESFJ: App.loadSpritesheet("mbti/ESFJ.png"),
+  ENFJ: App.loadSpritesheet("mbti/ENFJ.png"),
+  ENTJ: App.loadSpritesheet("mbti/ENTJ.png")
+};
 var Location = {
   MainScreen: Map.getLocationList("screen_main")[0],
   SubScreens: {
@@ -56,7 +74,7 @@ Object.entries(Location.Selects).forEach(function (_a, index) {
       player.spawnAtLocation("start");
       player.tag.questionNum++;
       renderMbtiQuestion(player);
-      player.showCenterLabel("".concat(questionCount, "/").concat(QuestionSize, " \uC644\uB8CC"));
+      player.showCenterLabel("".concat(questionCount, "/").concat(QuestionSize, " \uC644\uB8CC"), 0xffffff, 0x00000, 0);
     } else {
       var mbtiInfo = calculateMBTI(player.tag.answers);
       player.tag.mbti = mbtiInfo.title;
@@ -83,25 +101,34 @@ Object.entries(Location.Selects).forEach(function (_a, index) {
     }
   });
 });
+var cameraPosition = Map.getLocation("camera");
 App.onJoinPlayer.Add(function (player) {
   player.tag = {};
   player.tag.questionNum = 1;
   player.tag.answers = [];
   player.moveSpeed = 0;
-  player.displayRatio = 1.25;
+  if (!player.isMobile) {
+    player.displayRatio = 1;
+    if (cameraPosition) {
+      player.setCameraTarget(cameraPosition.x, cameraPosition.y, 0);
+    }
+  } else {
+    player.displayRatio = 0.8;
+  }
   player.enableFreeView = false;
-  player.showCenterLabel("MBTI 테스트 준비중...");
+  player.showCenterLabel("MBTI 테스트 준비중...", 0xffffff, 0x00000, 200);
   player.sendUpdated();
   var playerId = player.id;
   App.runLater(function () {
     var player = App.getPlayerByID(playerId);
     if (!player) return;
-    player.showCenterLabel("MBTI 테스트 준비 완료!");
+    player.showCenterLabel("MBTI 테스트 준비 완료!", 0xffffff, 0x00000, 200);
     player.moveSpeed = 140;
     player.sendUpdated();
     renderMbtiQuestion(player);
     player.tag.init = true;
   }, 1);
+  getMbtiResult(player);
 });
 var _refreshDelay = 0;
 App.onUpdate.Add(function (dt) {
@@ -228,7 +255,11 @@ function getMbtiResult(player) {
     if (!player) return;
     var response = JSON.parse(res);
     if (response) {
-      if (response.mbtiString) {}
+      if (response.mbtiString) {
+        //@ts-ignore
+        player.setCustomEffectSprite(2, MBTI_SPRITES[response.mbtiString], 0, 13, 1);
+        player.sendUpdated();
+      }
     }
   });
 }
