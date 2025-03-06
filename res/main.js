@@ -158,17 +158,17 @@ App.onJoinPlayer.Add(function (player) {
   }
   getMbtiResult(player);
 });
-var _refreshDelay = 0;
-App.onUpdate.Add(function (dt) {
-  _refreshDelay += dt;
-  if (_refreshDelay > 10) {
-    App.players.forEach(function (player) {
-      if (player.away) {
-        player.spawnAtMap("AlPRzo", "yBZAkk");
-      }
-    });
-  }
-});
+// let _refreshDelay = 0;
+// ScriptApp.onUpdate.Add((dt) => {
+//     _refreshDelay += dt;
+//     if (_refreshDelay > 10) {
+//         ScriptApp.players.forEach((player) => {
+//             if (player.away) {
+//                 player.spawnAtMap("AlPRzo", "yBZAkk");
+//             }
+//         })
+//     }
+// })
 function renderMbtiQuestion(player) {
   // const questionIndex = player.tag.questionNum - 1;
   var mbtiQuestion = MBTIQuestions_1.MBTIQuestions.find(function (d) {

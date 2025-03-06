@@ -153,17 +153,17 @@ ScriptApp.onJoinPlayer.Add((player) => {
     getMbtiResult(player);
 });
 
-let _refreshDelay = 0;
-ScriptApp.onUpdate.Add((dt) => {
-    _refreshDelay += dt;
-    if (_refreshDelay > 10) {
-        ScriptApp.players.forEach((player) => {
-            if (player.away) {
-                player.spawnAtMap("AlPRzo", "yBZAkk");
-            }
-        })
-    }
-})
+// let _refreshDelay = 0;
+// ScriptApp.onUpdate.Add((dt) => {
+//     _refreshDelay += dt;
+//     if (_refreshDelay > 10) {
+//         ScriptApp.players.forEach((player) => {
+//             if (player.away) {
+//                 player.spawnAtMap("AlPRzo", "yBZAkk");
+//             }
+//         })
+//     }
+// })
 
 function renderMbtiQuestion(player: ScriptPlayer) {
     // const questionIndex = player.tag.questionNum - 1;
