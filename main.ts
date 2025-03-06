@@ -1,5 +1,5 @@
 import { LocationInfo, ScriptPlayer } from "zep-script";
-import { MBTIAnswer, MBTIQuestions } from "./src/MBTIQuestions";
+import { getRandomIdsByDimension, MBTIAnswer, MBTIQuestions } from "./src/MBTIQuestions";
 import { createTextObject } from "./src/Utillity";
 
 const MBTI_SPRITES = {
@@ -20,6 +20,8 @@ const MBTI_SPRITES = {
     ENFJ: ScriptApp.loadSpritesheet("mbti/ENFJ.png"),
     ENTJ: ScriptApp.loadSpritesheet("mbti/ENTJ.png"),
 }
+
+const QuestionCountPerDimension = 15;
 
 const Location: {
     MainScreen: LocationInfo,
@@ -44,20 +46,19 @@ const Location: {
     }
 }
 
-const QuestionSize = Object.keys(MBTIQuestions).length;
+const QuestionSize = QuestionCountPerDimension * 4;
 
 Object.entries(Location.Selects).forEach(([key, location], index) => {
     //@ts-ignore
     ScriptApp.addOnLocationEnter(key, (player: ScriptPlayer) => {
-        const questionCount = player.tag.questionNum;
-        const question = MBTIQuestions[questionCount];
-        if (questionCount < QuestionSize && question) {
-            player.tag.answers.push({ id: question.id, value: index - 2 });
+        const question = MBTIQuestions.find((q) => q.id == player.tag.questionNum);
+        if (player.tag.questionOrderArr.length > 0) {
+            player.tag.answers.push({ id: player.tag.questionNum, value: index - 2 });
             // player.sendMessage(JSON.stringify(player.tag.answers));
             player.spawnAtLocation("start");
-            player.tag.questionNum++;
+            player.tag.questionNum = player.tag.questionOrderArr.pop();
             renderMbtiQuestion(player);
-            player.showCenterLabel(`${questionCount}/${QuestionSize} 완료`, 0xffffff, 0x00000, 0);
+            player.showCenterLabel(`${player.tag.answers.length}/${QuestionSize} 완료`, 0xffffff, 0x00000, 0);
         } else {
             const mbtiInfo = calculateMBTI(player.tag.answers);
             player.tag.mbti = mbtiInfo.title;
@@ -103,9 +104,10 @@ ScriptApp.onJoinPlayer.Add((player) => {
         loginRequired(player);
         return;
     }
-
-    player.tag.questionNum = 1;
+    player.tag.questionOrderArr = getRandomIdsByDimension(QuestionCountPerDimension);// 항목별로 n개
+    player.tag.questionNum = player.tag.questionOrderArr.pop();
     player.tag.answers = [];
+
     player.moveSpeed = 0;
     if (!player.isMobile) {
         player.displayRatio = 1;
@@ -147,11 +149,15 @@ ScriptApp.onUpdate.Add((dt) => {
 })
 
 function renderMbtiQuestion(player: ScriptPlayer) {
-    const questionIndex = player.tag.questionNum - 1;
-    const mbtiQuestion = MBTIQuestions[questionIndex];
+    // const questionIndex = player.tag.questionNum - 1;
+    const mbtiQuestion = MBTIQuestions.find((d) => d.id == player.tag.questionNum);
+    let language = "en";
+    if (player.language === "ko" || player.language === "ja") {
+        language = player.language;
+    }
 
     createTextObject(player,
-        mbtiQuestion.question,
+        mbtiQuestion.question[language],
         Location.MainScreen.x,
         Location.MainScreen.y,
         {
@@ -160,10 +166,11 @@ function renderMbtiQuestion(player: ScriptPlayer) {
             wordWrap: { useAdvancedWrap: true, width: Location.MainScreen.width * 32 },
             fixedWidth: Location.MainScreen.width * 32,
             align: "center",
-        })
+        }
+    )
 
     Object.values(Location.SubScreens).forEach((locationInfo, index) => {
-        const optionText = mbtiQuestion.options[index].text;
+        const optionText = mbtiQuestion.options[index].text[language];
 
         createTextObject(player,
             optionText,
@@ -233,10 +240,10 @@ function calculateMBTI(
     return {
         title: `${eOrI}${sOrN}${tOrF}${jOrP}`,
         percentages: {
-            eOrI: eScore >= iScore ? `E (${Math.floor(eScore / (eScore + iScore) * 100)})` : `I (${Math.floor(iScore / (eScore + iScore) * 100)})`,
-            sOrN: sScore >= nScore ? `S (${Math.floor(sScore / (sScore + nScore) * 100)})` : `N (${Math.floor(nScore / (sScore + nScore) * 100)})`,
-            tOrF: tScore >= fScore ? `T (${Math.floor(tScore / (tScore + fScore) * 100)})` : `F (${Math.floor(fScore / (tScore + fScore) * 100)})`,
-            jOrP: jScore >= pScore ? `J (${Math.floor(jScore / (jScore + pScore) * 100)})` : `P (${Math.floor(pScore / (jScore + pScore) * 100)})`,
+            eOrI: eScore >= iScore ? `E (${(Math.floor(eScore / (eScore + iScore) * 100)) || 0})` : `I (${(Math.floor(iScore / (eScore + iScore) * 100)) || 0})`,
+            sOrN: sScore >= nScore ? `S (${(Math.floor(sScore / (sScore + nScore) * 100)) || 0})` : `N (${(Math.floor(nScore / (sScore + nScore) * 100)) || 0})`,
+            tOrF: tScore >= fScore ? `T (${(Math.floor(tScore / (tScore + fScore) * 100)) || 0})` : `F (${(Math.floor(fScore / (tScore + fScore) * 100)) || 0})`,
+            jOrP: jScore >= pScore ? `J (${(Math.floor(jScore / (jScore + pScore) * 100)) || 0})` : `P (${(Math.floor(pScore / (jScore + pScore) * 100)) || 0})`,
         }
     };
 }
