@@ -41,27 +41,39 @@ var MBTI_SPRITES = {
   ENTJ: App.loadSpritesheet("mbti/ENTJ.png")
 };
 var QuestionCountPerDimension = 15;
+function safeGetLocation(key) {
+  try {
+    var locations = Map.getLocationList(key);
+    if (!locations || locations.length === 0) {
+      return null;
+    }
+    return locations[0];
+  } catch (error) {
+    return null;
+  }
+}
 var Location = {
-  MainScreen: Map.getLocationList("screen_main")[0],
+  MainScreen: safeGetLocation("screen_main"),
   SubScreens: {
-    screen_sub_1: Map.getLocationList("screen_sub_1")[0],
-    screen_sub_2: Map.getLocationList("screen_sub_2")[0],
-    screen_sub_3: Map.getLocationList("screen_sub_3")[0],
-    screen_sub_4: Map.getLocationList("screen_sub_4")[0],
-    screen_sub_5: Map.getLocationList("screen_sub_5")[0]
+    screen_sub_1: safeGetLocation("screen_sub_1"),
+    screen_sub_2: safeGetLocation("screen_sub_2"),
+    screen_sub_3: safeGetLocation("screen_sub_3"),
+    screen_sub_4: safeGetLocation("screen_sub_4"),
+    screen_sub_5: safeGetLocation("screen_sub_5")
   },
   Selects: {
-    select_1: Map.getLocationList("select_1")[0],
-    select_2: Map.getLocationList("select_2")[0],
-    select_3: Map.getLocationList("select_3")[0],
-    select_4: Map.getLocationList("select_4")[0],
-    select_5: Map.getLocationList("select_5")[0]
+    select_1: safeGetLocation("select_1"),
+    select_2: safeGetLocation("select_2"),
+    select_3: safeGetLocation("select_3"),
+    select_4: safeGetLocation("select_4"),
+    select_5: safeGetLocation("select_5")
   }
 };
 var QuestionSize = QuestionCountPerDimension * 4;
 Object.entries(Location.Selects).forEach(function (_a, index) {
   var key = _a[0],
     location = _a[1];
+  if (!location) return;
   //@ts-ignore
   App.addOnLocationEnter(key, function (player) {
     var question = MBTIQuestions_1.MBTIQuestions.find(function (q) {
@@ -88,7 +100,7 @@ Object.entries(Location.Selects).forEach(function (_a, index) {
         resultString_1 += string + "\n";
       });
       player.showAlert("MBTI 검사 결과", function () {
-        player.spawnAtMap("AlPRzo", "yBZAkk");
+        player.spawnAtMap("6epyab", "WaV3qN");
       }, {
         content: resultString_1
       });
@@ -106,6 +118,7 @@ Object.entries(Location.Selects).forEach(function (_a, index) {
   });
 });
 var cameraPosition = Map.getLocation("camera");
+var isMBTITestMap = !!Map.getLocation("map_mbti_test");
 App.onJoinPlayer.Add(function (player) {
   player.tag = {};
   player.tag.systemWidegt = player.showWidget("system.html", "topleft", 0, 0);
@@ -116,31 +129,33 @@ App.onJoinPlayer.Add(function (player) {
     loginRequired(player);
     return;
   }
-  player.tag.questionOrderArr = (0, MBTIQuestions_1.getRandomIdsByDimension)(QuestionCountPerDimension); // 항목별로 n개
-  player.tag.questionNum = player.tag.questionOrderArr.pop();
-  player.tag.answers = [];
-  player.moveSpeed = 0;
-  if (!player.isMobile) {
-    player.displayRatio = 1;
-    if (cameraPosition) {
-      player.setCameraTarget(cameraPosition.x, cameraPosition.y, 0);
+  if (isMBTITestMap) {
+    player.tag.questionOrderArr = (0, MBTIQuestions_1.getRandomIdsByDimension)(QuestionCountPerDimension); // 항목별로 n개
+    player.tag.questionNum = player.tag.questionOrderArr.pop();
+    player.tag.answers = [];
+    player.moveSpeed = 0;
+    if (!player.isMobile) {
+      player.displayRatio = 1;
+      if (cameraPosition) {
+        player.setCameraTarget(cameraPosition.x, cameraPosition.y, 0);
+      }
+    } else {
+      player.displayRatio = 0.8;
     }
-  } else {
-    player.displayRatio = 0.8;
-  }
-  player.enableFreeView = false;
-  player.showCenterLabel("MBTI 테스트 준비중...", 0xffffff, 0x00000, 200);
-  player.sendUpdated();
-  var playerId = player.id;
-  App.runLater(function () {
-    var player = App.getPlayerByID(playerId);
-    if (!player) return;
-    player.showCenterLabel("MBTI 테스트 준비 완료!", 0xffffff, 0x00000, 200);
-    player.moveSpeed = 140;
+    player.enableFreeView = false;
+    player.showCenterLabel("MBTI 테스트 준비중...", 0xffffff, 0x00000, 200);
     player.sendUpdated();
-    renderMbtiQuestion(player);
-    player.tag.init = true;
-  }, 1);
+    var playerId_1 = player.id;
+    App.runLater(function () {
+      var player = App.getPlayerByID(playerId_1);
+      if (!player) return;
+      player.showCenterLabel("MBTI 테스트 준비 완료!", 0xffffff, 0x00000, 200);
+      player.moveSpeed = 140;
+      player.sendUpdated();
+      renderMbtiQuestion(player);
+      player.tag.init = true;
+    }, 1);
+  }
   getMbtiResult(player);
 });
 var _refreshDelay = 0;
@@ -163,17 +178,20 @@ function renderMbtiQuestion(player) {
   if (player.language === "ko" || player.language === "ja") {
     language = player.language;
   }
-  (0, Utillity_1.createTextObject)(player, mbtiQuestion.question[language], Location.MainScreen.x, Location.MainScreen.y, {
-    color: "white",
-    fontSize: "20px",
-    wordWrap: {
-      useAdvancedWrap: true,
-      width: Location.MainScreen.width * 32
-    },
-    fixedWidth: Location.MainScreen.width * 32,
-    align: "center"
-  });
+  if (Location.MainScreen) {
+    (0, Utillity_1.createTextObject)(player, mbtiQuestion.question[language], Location.MainScreen.x, Location.MainScreen.y - 0.5, {
+      color: "white",
+      fontSize: "20px",
+      wordWrap: {
+        useAdvancedWrap: true,
+        width: Location.MainScreen.width * 32
+      },
+      fixedWidth: Location.MainScreen.width * 32,
+      align: "center"
+    });
+  }
   Object.values(Location.SubScreens).forEach(function (locationInfo, index) {
+    if (!locationInfo) return;
     var optionText = mbtiQuestion.options[index].text[language];
     (0, Utillity_1.createTextObject)(player, optionText, locationInfo.x, locationInfo.y, {
       color: "white",
@@ -275,9 +293,13 @@ function getMbtiResult(player) {
     var response = JSON.parse(res);
     if (response) {
       if (response.mbtiString) {
-        //@ts-ignore
-        player.setCustomEffectSprite(2, MBTI_SPRITES[response.mbtiString], 0, 13, 1);
-        player.sendUpdated();
+        if (App.mapHashID !== "WaV3qN") {
+          player.spawnAtMap("6epyab", "WaV3qN");
+        } else {
+          //@ts-ignore
+          player.setCustomEffectSprite(2, MBTI_SPRITES[response.mbtiString], 0, 13, 1);
+          player.sendUpdated();
+        }
       }
     }
   });

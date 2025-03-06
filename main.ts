@@ -23,32 +23,45 @@ const MBTI_SPRITES = {
 
 const QuestionCountPerDimension = 15;
 
+function safeGetLocation(key: string): LocationInfo {
+    try {
+        const locations = ScriptMap.getLocationList(key);
+        if (!locations || locations.length === 0) {
+            return null;
+        }
+        return locations[0];
+    } catch (error) {
+        return null;
+    }
+}
+
 const Location: {
     MainScreen: LocationInfo,
     SubScreens: Record<string, LocationInfo>,
     Selects: Record<string, LocationInfo>,
 }
     = {
-    MainScreen: ScriptMap.getLocationList("screen_main")[0],
+    MainScreen: safeGetLocation("screen_main"),
     SubScreens: {
-        screen_sub_1: ScriptMap.getLocationList("screen_sub_1")[0],
-        screen_sub_2: ScriptMap.getLocationList("screen_sub_2")[0],
-        screen_sub_3: ScriptMap.getLocationList("screen_sub_3")[0],
-        screen_sub_4: ScriptMap.getLocationList("screen_sub_4")[0],
-        screen_sub_5: ScriptMap.getLocationList("screen_sub_5")[0],
+        screen_sub_1: safeGetLocation("screen_sub_1"),
+        screen_sub_2: safeGetLocation("screen_sub_2"),
+        screen_sub_3: safeGetLocation("screen_sub_3"),
+        screen_sub_4: safeGetLocation("screen_sub_4"),
+        screen_sub_5: safeGetLocation("screen_sub_5"),
     },
     Selects: {
-        select_1: ScriptMap.getLocationList("select_1")[0],
-        select_2: ScriptMap.getLocationList("select_2")[0],
-        select_3: ScriptMap.getLocationList("select_3")[0],
-        select_4: ScriptMap.getLocationList("select_4")[0],
-        select_5: ScriptMap.getLocationList("select_5")[0],
+        select_1: safeGetLocation("select_1"),
+        select_2: safeGetLocation("select_2"),
+        select_3: safeGetLocation("select_3"),
+        select_4: safeGetLocation("select_4"),
+        select_5: safeGetLocation("select_5"),
     }
 }
 
 const QuestionSize = QuestionCountPerDimension * 4;
 
 Object.entries(Location.Selects).forEach(([key, location], index) => {
+    if(!location) return;
     //@ts-ignore
     ScriptApp.addOnLocationEnter(key, (player: ScriptPlayer) => {
         const question = MBTIQuestions.find((q) => q.id == player.tag.questionNum);
@@ -70,7 +83,7 @@ Object.entries(Location.Selects).forEach(([key, location], index) => {
                 resultString += string + "\n";
             })
             player.showAlert("MBTI 검사 결과", () => {
-                player.spawnAtMap("AlPRzo", "yBZAkk");
+                player.spawnAtMap("6epyab", "WaV3qN");
             }, {
                 content: resultString
             })
@@ -92,6 +105,8 @@ Object.entries(Location.Selects).forEach(([key, location], index) => {
 
 const cameraPosition = ScriptMap.getLocation("camera");
 
+const isMBTITestMap = !!ScriptMap.getLocation("map_mbti_test");
+
 ScriptApp.onJoinPlayer.Add((player) => {
     player.tag = {};
     player.tag.systemWidegt = player.showWidget("system.html", "topleft", 0, 0);
@@ -104,34 +119,36 @@ ScriptApp.onJoinPlayer.Add((player) => {
         loginRequired(player);
         return;
     }
-    player.tag.questionOrderArr = getRandomIdsByDimension(QuestionCountPerDimension);// 항목별로 n개
-    player.tag.questionNum = player.tag.questionOrderArr.pop();
-    player.tag.answers = [];
-
-    player.moveSpeed = 0;
-    if (!player.isMobile) {
-        player.displayRatio = 1;
-        if (cameraPosition) {
-            player.setCameraTarget(cameraPosition.x, cameraPosition.y, 0);
+    
+    if(isMBTITestMap){
+        player.tag.questionOrderArr = getRandomIdsByDimension(QuestionCountPerDimension);// 항목별로 n개
+        player.tag.questionNum = player.tag.questionOrderArr.pop();
+        player.tag.answers = [];
+        player.moveSpeed = 0;
+        if (!player.isMobile) {
+            player.displayRatio = 1;
+            if (cameraPosition) {
+                player.setCameraTarget(cameraPosition.x, cameraPosition.y, 0);
+            }
+        } else {
+            player.displayRatio = 0.8;
         }
-    } else {
-        player.displayRatio = 0.8;
-    }
-    player.enableFreeView = false;
+        player.enableFreeView = false;
 
-    player.showCenterLabel("MBTI 테스트 준비중...", 0xffffff, 0x00000, 200);
-    player.sendUpdated();
-
-    const playerId = player.id;
-    ScriptApp.runLater(() => {
-        const player = ScriptApp.getPlayerByID(playerId);
-        if (!player) return;
-        player.showCenterLabel("MBTI 테스트 준비 완료!", 0xffffff, 0x00000, 200);
-        player.moveSpeed = 140;
+        player.showCenterLabel("MBTI 테스트 준비중...", 0xffffff, 0x00000, 200);
         player.sendUpdated();
-        renderMbtiQuestion(player);
-        player.tag.init = true;
-    }, 1);
+    
+        const playerId = player.id;
+        ScriptApp.runLater(() => {
+            const player = ScriptApp.getPlayerByID(playerId);
+            if (!player) return;
+            player.showCenterLabel("MBTI 테스트 준비 완료!", 0xffffff, 0x00000, 200);
+            player.moveSpeed = 140;
+            player.sendUpdated();
+            renderMbtiQuestion(player);
+            player.tag.init = true;
+        }, 1);
+    }
 
     getMbtiResult(player);
 });
@@ -156,20 +173,23 @@ function renderMbtiQuestion(player: ScriptPlayer) {
         language = player.language;
     }
 
-    createTextObject(player,
-        mbtiQuestion.question[language],
-        Location.MainScreen.x,
-        Location.MainScreen.y,
-        {
-            color: "white",
-            fontSize: "20px",
-            wordWrap: { useAdvancedWrap: true, width: Location.MainScreen.width * 32 },
-            fixedWidth: Location.MainScreen.width * 32,
-            align: "center",
-        }
-    )
+    if(Location.MainScreen){
+        createTextObject(player,
+            mbtiQuestion.question[language],
+            Location.MainScreen.x,
+            Location.MainScreen.y - 0.5,
+            {
+                color: "white",
+                fontSize: "20px",
+                wordWrap: { useAdvancedWrap: true, width: Location.MainScreen.width * 32 },
+                fixedWidth: Location.MainScreen.width * 32,
+                align: "center",
+            }
+        )
+    }
 
     Object.values(Location.SubScreens).forEach((locationInfo, index) => {
+        if(!locationInfo) return;
         const optionText = mbtiQuestion.options[index].text[language];
 
         createTextObject(player,
@@ -290,9 +310,13 @@ function getMbtiResult(player) {
         const response = JSON.parse(res);
         if (response) {
             if (response.mbtiString) {
-                //@ts-ignore
-                player.setCustomEffectSprite(2, MBTI_SPRITES[response.mbtiString], 0, 13, 1);
-                player.sendUpdated();
+                if(ScriptApp.mapHashID !== "WaV3qN"){
+                    player.spawnAtMap("6epyab", "WaV3qN");
+                } else {
+                    //@ts-ignore
+                    player.setCustomEffectSprite(2, MBTI_SPRITES[response.mbtiString], 0, 13, 1);
+                    player.sendUpdated();
+                }
             }
         }
     })
