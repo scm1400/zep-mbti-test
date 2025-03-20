@@ -67,7 +67,6 @@ Object.entries(Location.Selects).forEach(([key, location], index) => {
         const question = MBTIQuestions.find((q) => q.id == player.tag.questionNum);
         if (player.tag.questionOrderArr.length > 0) {
             player.tag.answers.push({ id: player.tag.questionNum, value: index - 2 });
-            // player.sendMessage(JSON.stringify(player.tag.answers));
             player.spawnAtLocation("start");
             player.tag.questionNum = player.tag.questionOrderArr.pop();
             renderMbtiQuestion(player);
@@ -78,15 +77,10 @@ Object.entries(Location.Selects).forEach(([key, location], index) => {
             player.title = player.tag.mbti;
             //@ts-ignore
             player.setCustomEffectSprite(2, MBTI_SPRITES[mbtiInfo.title], 0, 13, 1);
-            let resultString = "";
-            Object.values(mbtiInfo.percentages).forEach((string, index,) => {
-                resultString += string + "\n";
-            })
-            player.showAlert("MBTI 검사 결과", () => {
-                player.spawnAtMap("6epyab", "WaV3qN");
-            }, {
-                content: resultString
-            })
+            
+            // MBTI 결과 팝업 표시
+            showMbtiResultPopup(player, mbtiInfo);
+            
             player.spawnAtLocation("complete");
             player.sendUpdated();
 
@@ -98,7 +92,6 @@ Object.entries(Location.Selects).forEach(([key, location], index) => {
                 updatedAt: new Date().toISOString(),
             }
             saveMbtiResult(player.id, data, () => { });
-
         }
     })
 })
@@ -107,23 +100,31 @@ const cameraPosition = ScriptMap.getLocation("camera");
 
 const isMBTITestMap = !!ScriptMap.getLocation("map_mbti_test");
 
+// 플레이어가 입장할 때 동작하는 함수
 ScriptApp.onJoinPlayer.Add((player) => {
-    player.tag = {};
-    player.tag.systemWidegt = player.showWidget("system.html", "topleft", 0, 0);
+    player.tag = {
+        welcomeWidget: null,
+        resultWidget: null,
+        systemWidget: null,
+        mbti: null,
+        mbtiPercentages: null,
+        questionOrderArr: [],
+        questionNum: null,
+        answers: [],
+        init: false
+    };
+    
+    player.tag.systemWidget = player.showWidget("system.html", "topleft", 0, 0);
 
     if (player.isGuest) {
         player.moveSpeed = 0;
         player.sendUpdated();
         showLoginRequiredPopup(player);
-
         loginRequired(player);
         return;
     }
     
     if(isMBTITestMap){
-        player.tag.questionOrderArr = getRandomIdsByDimension(QuestionCountPerDimension);// 항목별로 n개
-        player.tag.questionNum = player.tag.questionOrderArr.pop();
-        player.tag.answers = [];
         player.moveSpeed = 0;
         if (!player.isMobile) {
             player.displayRatio = 1;
@@ -134,36 +135,134 @@ ScriptApp.onJoinPlayer.Add((player) => {
             player.displayRatio = 0.8;
         }
         player.enableFreeView = false;
-
-        player.showCenterLabel("MBTI 테스트 준비중...", 0xffffff, 0x00000, 200);
         player.sendUpdated();
-    
-        const playerId = player.id;
-        ScriptApp.runLater(() => {
-            const player = ScriptApp.getPlayerByID(playerId);
-            if (!player) return;
-            player.showCenterLabel("MBTI 테스트 준비 완료!", 0xffffff, 0x00000, 200);
-            player.moveSpeed = 140;
-            player.sendUpdated();
-            renderMbtiQuestion(player);
-            player.tag.init = true;
-        }, 1);
+        
+        // 환영 팝업 표시
+        showWelcomePopup(player);
     }
 
     getMbtiResult(player);
 });
 
-// let _refreshDelay = 0;
-// ScriptApp.onUpdate.Add((dt) => {
-//     _refreshDelay += dt;
-//     if (_refreshDelay > 10) {
-//         ScriptApp.players.forEach((player) => {
-//             if (player.away) {
-//                 player.spawnAtMap("AlPRzo", "yBZAkk");
-//             }
-//         })
-//     }
-// })
+// 환영 팝업 표시 함수
+function showWelcomePopup(player: ScriptPlayer) {
+    player.tag.welcomeWidget = player.showWidget("welcome_popup.html", "center", 0, 0);
+    
+    // 위젯에서 메시지를 받으면 동작하는 함수
+    player.tag.welcomeWidget.onMessage.Add(function(player, data) {
+        if (data.type === "START_MBTI_TEST") {
+            // 테스트 시작 요청 처리
+            if (player.tag.welcomeWidget) {
+                player.tag.welcomeWidget.destroy();
+                player.tag.welcomeWidget = null;
+            }
+            
+            startMbtiTest(player);
+        }
+    });
+}
+
+// MBTI 테스트 시작 함수
+function startMbtiTest(player: ScriptPlayer) {
+    player.tag.questionOrderArr = getRandomIdsByDimension(QuestionCountPerDimension);// 항목별로 n개
+    player.tag.questionNum = player.tag.questionOrderArr.pop();
+    player.tag.answers = [];
+    
+    player.showCenterLabel("MBTI 테스트 준비중...", 0xffffff, 0x00000, 200);
+    
+    const playerId = player.id;
+    ScriptApp.runLater(() => {
+        const player = ScriptApp.getPlayerByID(playerId);
+        if (!player) return;
+        player.showCenterLabel("MBTI 테스트 준비 완료!", 0xffffff, 0x00000, 200);
+        player.moveSpeed = 140;
+        player.sendUpdated();
+        renderMbtiQuestion(player);
+        player.tag.init = true;
+    }, 1);
+}
+
+// MBTI 결과 팝업 표시 함수
+function showMbtiResultPopup(player: ScriptPlayer, mbtiInfo) {
+    // 백분율 정보를 UI에 맞게 변환
+    const eScore = parseInt(mbtiInfo.percentages.eOrI.match(/\d+/)[0]);
+    const sScore = parseInt(mbtiInfo.percentages.sOrN.match(/\d+/)[0]);
+    const tScore = parseInt(mbtiInfo.percentages.tOrF.match(/\d+/)[0]);
+    const jScore = parseInt(mbtiInfo.percentages.jOrP.match(/\d+/)[0]);
+    
+    player.tag.mbti = mbtiInfo.title;
+    player.tag.mbtiPercentages = {
+        EI: mbtiInfo.title[0] === 'E' ? `E ${eScore}% / I ${100 - eScore}%` : `I ${eScore}% / E ${100 - eScore}%`,
+        SN: mbtiInfo.title[1] === 'S' ? `S ${sScore}% / N ${100 - sScore}%` : `N ${sScore}% / S ${100 - sScore}%`,
+        TF: mbtiInfo.title[2] === 'T' ? `T ${tScore}% / F ${100 - tScore}%` : `F ${tScore}% / T ${100 - tScore}%`,
+        JP: mbtiInfo.title[3] === 'J' ? `J ${jScore}% / P ${100 - jScore}%` : `P ${jScore}% / J ${100 - jScore}%`
+    };
+    
+    player.tag.resultWidget = player.showWidget("result_popup.html", "center", 0, 0);
+    
+    // 위젯에서 메시지를 받으면 동작하는 함수
+    player.tag.resultWidget.onMessage.Add(function(player, data) {
+        if (data.type === "REQUEST_MBTI_RESULT") {
+            // 결과 요청 처리
+            if (player.tag.mbti) {
+                const mbtiResult = {
+                    mbtiType: player.tag.mbti,
+                    percentages: player.tag.mbtiPercentages
+                };
+                
+                // 위젯으로 결과 데이터 전송
+                player.tag.resultWidget.sendMessage({
+                    mbtiResult: mbtiResult
+                });
+            }
+        } else if (data.type === "CLOSE_RESULT") {
+            // 결과 팝업 닫기 요청
+            if (player.tag.resultWidget) {
+                player.tag.resultWidget.destroy();
+                player.tag.resultWidget = null;
+            }
+        } else if (data.type === "RETRY_MBTI_TEST") {
+            // 테스트 다시 시작 요청
+            if (player.tag.resultWidget) {
+                player.tag.resultWidget.destroy();
+                player.tag.resultWidget = null;
+            }
+            
+            startMbtiTest(player);
+        } else if (data.type === "SHARE_TO_ZEP_CHAT") {
+            // Zep 채팅창에 결과 공유
+            if (data.content) {
+                // 채팅창에 MBTI 결과 공유
+                ScriptApp.sayToAll(`[${player.name}님의 MBTI 결과] ${player.tag.mbti}`);
+                ScriptApp.sayToAll(`${getMbtiNickname(player.tag.mbti)}`);
+            }
+        }
+    });
+}
+
+// MBTI 유형의 별명 반환 함수
+function getMbtiNickname(mbtiType: string): string {
+    const mbtiNicknames = {
+        "ISTJ": "청렴결백한 논리주의자",
+        "ISFJ": "용감한 수호자",
+        "INFJ": "선의의 옹호자",
+        "INTJ": "용의주도한 전략가",
+        "ISTP": "만능 재주꾼",
+        "ISFP": "호기심 많은 예술가",
+        "INFP": "열정적인 중재자",
+        "INTP": "논리적인 사색가",
+        "ESTP": "모험을 즐기는 사업가",
+        "ESFP": "자유로운 영혼의 연예인",
+        "ENFP": "열정적인 활동가",
+        "ENTP": "논쟁을 즐기는 변론가",
+        "ESTJ": "엄격한 관리자",
+        "ESFJ": "사교적인 외교관",
+        "ENFJ": "정의로운 사회운동가",
+        "ENTJ": "대담한 통솔자"
+    };
+    
+    return mbtiNicknames[mbtiType] || "알 수 없는 유형";
+}
 
 function renderMbtiQuestion(player: ScriptPlayer) {
     // const questionIndex = player.tag.questionNum - 1;
@@ -332,8 +431,8 @@ function showLoginRequiredPopup(player: ScriptPlayer) {
 }
 
 function loginRequired(player) {
-    if (player.tag.systemWidegt) {
-        player.tag.systemWidegt.sendMessage({
+    if (player.tag.systemWidget) {
+        player.tag.systemWidget.sendMessage({
             type: "loginRequired",
         });
     }
