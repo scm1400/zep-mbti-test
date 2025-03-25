@@ -169,7 +169,7 @@ function showWelcomePopup(player) {
       showMbtiResultPopup(player);
     } else {
       // 처음 테스트하는 사용자인 경우 환영 팝업 표시
-      player.tag.welcomeWidget = player.showWidget("res/welcome_popup.html", "middle", 600, 600);
+      player.tag.welcomeWidget = player.showWidget("welcome_popup.html", "middle", 600, 600);
       // 위젯에서 메시지를 받으면 동작하는 함수
       player.tag.welcomeWidget.onMessage.Add(function (player, data) {
         if (data.type === "START_MBTI_TEST") {
@@ -276,7 +276,7 @@ function showMbtiResultPopup(player, mbtiInfo) {
       // 기존 테스트 결과가 있는 경우에만 환영 팝업 표시
       if (mbtiInfo === null) {
         // 결과를 닫으면 환영 팝업 표시 (선택할 수 있도록)
-        player.tag.welcomeWidget = player.showWidget("res/welcome_popup.html", "middle", 600, 600);
+        player.tag.welcomeWidget = player.showWidget("welcome_popup.html", "middle", 600, 600);
         // 위젯에서 메시지를 받으면 동작하는 함수
         player.tag.welcomeWidget.onMessage.Add(function (player, data) {
           if (data.type === "START_MBTI_TEST") {
@@ -504,7 +504,7 @@ function getMbtiResult(player) {
         } else {
           player.tag.mbtiPercentages = response.mbtiPercentages;
         }
-        console.log("설정된 mbtiPercentages (DB):", JSON.stringify(player.tag.mbtiPercentages));
+        // console.log("설정된 mbtiPercentages (DB):", JSON.stringify(player.tag.mbtiPercentages));
         // 커스텀 이펙트 설정
         //@ts-ignore
         player.setCustomEffectSprite(2, MBTI_SPRITES[response.mbtiString], 0, 13, 1);
