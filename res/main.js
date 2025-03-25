@@ -84,7 +84,6 @@ Object.entries(Location.Selects).forEach(function (_a, index) {
         id: player.tag.questionNum,
         value: index - 2
       });
-      // player.sendMessage(JSON.stringify(player.tag.answers));
       player.spawnAtLocation("start");
       player.tag.questionNum = player.tag.questionOrderArr.pop();
       renderMbtiQuestion(player);
@@ -95,15 +94,8 @@ Object.entries(Location.Selects).forEach(function (_a, index) {
       player.title = player.tag.mbti;
       //@ts-ignore
       player.setCustomEffectSprite(2, MBTI_SPRITES[mbtiInfo.title], 0, 13, 1);
-      var resultString_1 = "";
-      Object.values(mbtiInfo.percentages).forEach(function (string, index) {
-        resultString_1 += string + "\n";
-      });
-      player.showAlert("MBTI 검사 결과", function () {
-        player.spawnAtMap("6epyab", "WaV3qN");
-      }, {
-        content: resultString_1
-      });
+      // MBTI 결과 팝업 표시
+      showMbtiResultPopup(player, mbtiInfo);
       player.spawnAtLocation("complete");
       player.sendUpdated();
       var data = {
@@ -119,9 +111,20 @@ Object.entries(Location.Selects).forEach(function (_a, index) {
 });
 var cameraPosition = Map.getLocation("camera");
 var isMBTITestMap = !!Map.getLocation("map_mbti_test");
+// 플레이어가 입장할 때 동작하는 함수
 App.onJoinPlayer.Add(function (player) {
-  player.tag = {};
-  player.tag.systemWidegt = player.showWidget("system.html", "topleft", 0, 0);
+  player.tag = {
+    welcomeWidget: null,
+    resultWidget: null,
+    systemWidget: null,
+    mbti: null,
+    mbtiPercentages: null,
+    questionOrderArr: [],
+    questionNum: null,
+    answers: [],
+    init: false
+  };
+  player.tag.systemWidget = player.showWidget("system.html", "topleft", 0, 0);
   if (player.isGuest) {
     player.moveSpeed = 0;
     player.sendUpdated();
@@ -130,9 +133,6 @@ App.onJoinPlayer.Add(function (player) {
     return;
   }
   if (isMBTITestMap) {
-    player.tag.questionOrderArr = (0, MBTIQuestions_1.getRandomIdsByDimension)(QuestionCountPerDimension); // 항목별로 n개
-    player.tag.questionNum = player.tag.questionOrderArr.pop();
-    player.tag.answers = [];
     player.moveSpeed = 0;
     if (!player.isMobile) {
       player.displayRatio = 1;
@@ -143,32 +143,229 @@ App.onJoinPlayer.Add(function (player) {
       player.displayRatio = 0.8;
     }
     player.enableFreeView = false;
-    player.showCenterLabel("MBTI 테스트 준비중...", 0xffffff, 0x00000, 200);
     player.sendUpdated();
-    var playerId_1 = player.id;
-    App.runLater(function () {
-      var player = App.getPlayerByID(playerId_1);
-      if (!player) return;
-      player.showCenterLabel("MBTI 테스트 준비 완료!", 0xffffff, 0x00000, 200);
-      player.moveSpeed = 140;
-      player.sendUpdated();
-      renderMbtiQuestion(player);
-      player.tag.init = true;
-    }, 1);
+    // 환영 팝업 표시
+    showWelcomePopup(player);
   }
   getMbtiResult(player);
 });
-// let _refreshDelay = 0;
-// ScriptApp.onUpdate.Add((dt) => {
-//     _refreshDelay += dt;
-//     if (_refreshDelay > 10) {
-//         ScriptApp.players.forEach((player) => {
-//             if (player.away) {
-//                 player.spawnAtMap("AlPRzo", "yBZAkk");
-//             }
-//         })
-//     }
-// })
+// 환영 팝업 표시 함수
+function showWelcomePopup(player) {
+  // 먼저 DB에서 기존 결과가 있는지 확인
+  var AWS_API = 'https://jstvymmti6.execute-api.ap-northeast-2.amazonaws.com/liveAppDBRequest';
+  var CollectionName = "MBTI_RESULT";
+  var requestURL = "".concat(AWS_API, "?collection=").concat(CollectionName, "&key=").concat(player.id);
+  App.httpGet(requestURL, null, function (res) {
+    var response = JSON.parse(res);
+    if (response && response.mbtiString) {
+      // 이미 테스트를 완료한 사용자인 경우
+      player.tag.mbti = response.mbtiString;
+      player.tag.mbtiPercentages = response.mbtiPercentages;
+      // 커스텀 이펙트 설정
+      //@ts-ignore
+      player.setCustomEffectSprite(2, MBTI_SPRITES[response.mbtiString], 0, 13, 1);
+      player.sendUpdated();
+      // 바로 결과 팝업 표시
+      showMbtiResultPopup(player);
+    } else {
+      // 처음 테스트하는 사용자인 경우 환영 팝업 표시
+      player.tag.welcomeWidget = player.showWidget("res/welcome_popup.html", "middle", 600, 600);
+      // 위젯에서 메시지를 받으면 동작하는 함수
+      player.tag.welcomeWidget.onMessage.Add(function (player, data) {
+        if (data.type === "START_MBTI_TEST") {
+          // 테스트 시작 요청 처리
+          if (player.tag.welcomeWidget) {
+            player.tag.welcomeWidget.destroy();
+            player.tag.welcomeWidget = null;
+          }
+          startMbtiTest(player);
+        } else if (data.type === "CHECK_TEST_COMPLETED") {
+          // 테스트 완료 여부 확인 요청
+          checkTestCompleted(player);
+        } else if (data.type === "GO_TO_MBTI_LOUNGE") {
+          // MBTI 라운지로 이동 요청
+          if (player.tag.welcomeWidget) {
+            player.tag.welcomeWidget.destroy();
+            player.tag.welcomeWidget = null;
+          }
+          goToMBTILounge(player);
+        }
+      });
+    }
+  });
+}
+// MBTI 결과 팝업 표시 함수
+function showMbtiResultPopup(player, mbtiInfo) {
+  if (mbtiInfo === void 0) {
+    mbtiInfo = null;
+  }
+  // mbtiInfo가 제공된 경우 (테스트 완료 후 호출된 경우)
+  if (mbtiInfo) {
+    // console.log("받은 MBTI 결과 데이터:", JSON.stringify(mbtiInfo));
+    // 백분율 정보 추출 및 변환
+    var eOrIType = void 0,
+      sOrNType = void 0,
+      tOrFType = void 0,
+      jOrPType = void 0;
+    var eOrIScore = void 0,
+      sOrNScore = void 0,
+      tOrFScore = void 0,
+      jOrPScore = void 0;
+    try {
+      // 정규식 패턴 수정
+      var eOrIMatch = mbtiInfo.percentages.eOrI.match(/([EI])\s*\((\d+)\)/);
+      var sOrNMatch = mbtiInfo.percentages.sOrN.match(/([SN])\s*\((\d+)\)/);
+      var tOrFMatch = mbtiInfo.percentages.tOrF.match(/([TF])\s*\((\d+)\)/);
+      var jOrPMatch = mbtiInfo.percentages.jOrP.match(/([JP])\s*\((\d+)\)/);
+      // 첫 번째 문자와 백분율 추출
+      eOrIType = eOrIMatch ? eOrIMatch[1] : mbtiInfo.title[0];
+      sOrNType = sOrNMatch ? sOrNMatch[1] : mbtiInfo.title[1];
+      tOrFType = tOrFMatch ? tOrFMatch[1] : mbtiInfo.title[2];
+      jOrPType = jOrPMatch ? jOrPMatch[1] : mbtiInfo.title[3];
+      eOrIScore = eOrIMatch ? parseInt(eOrIMatch[2]) : 50;
+      sOrNScore = sOrNMatch ? parseInt(sOrNMatch[2]) : 50;
+      tOrFScore = tOrFMatch ? parseInt(tOrFMatch[2]) : 50;
+      jOrPScore = jOrPMatch ? parseInt(jOrPMatch[2]) : 50;
+      // console.log("추출된 타입과 점수:", {
+      //     eOrIType, eOrIScore,
+      //     sOrNType, sOrNScore,
+      //     tOrFType, tOrFScore,
+      //     jOrPType, jOrPScore
+      // });
+    } catch (err) {
+      // console.error("정규식 처리 중 오류 발생:", err);
+      // 오류 발생 시 기본값 설정
+      eOrIType = mbtiInfo.title[0];
+      sOrNType = mbtiInfo.title[1];
+      tOrFType = mbtiInfo.title[2];
+      jOrPType = mbtiInfo.title[3];
+      eOrIScore = sOrNScore = tOrFScore = jOrPScore = 50;
+    }
+    player.tag.mbti = mbtiInfo.title;
+    player.tag.mbtiPercentages = {
+      EI: eOrIType === 'E' ? "E ".concat(eOrIScore, "% / I ").concat(100 - eOrIScore, "%") : "I ".concat(eOrIScore, "% / E ").concat(100 - eOrIScore, "%"),
+      SN: sOrNType === 'S' ? "S ".concat(sOrNScore, "% / N ").concat(100 - sOrNScore, "%") : "N ".concat(sOrNScore, "% / S ").concat(100 - sOrNScore, "%"),
+      TF: tOrFType === 'T' ? "T ".concat(tOrFScore, "% / F ").concat(100 - tOrFScore, "%") : "F ".concat(tOrFScore, "% / T ").concat(100 - tOrFScore, "%"),
+      JP: jOrPType === 'J' ? "J ".concat(jOrPScore, "% / P ").concat(100 - jOrPScore, "%") : "P ".concat(jOrPScore, "% / J ").concat(100 - jOrPScore, "%")
+    };
+    // console.log("설정된 mbtiPercentages:", JSON.stringify(player.tag.mbtiPercentages));
+  }
+  // 결과 위젯 표시
+  player.tag.resultWidget = player.showWidget("result_popup.html", "top", 700, 800);
+  // 위젯에서 메시지를 받으면 동작하는 함수
+  player.tag.resultWidget.onMessage.Add(function (player, data) {
+    if (data.type === "REQUEST_MBTI_RESULT") {
+      // 결과 요청 처리
+      if (player.tag.mbti) {
+        var mbtiResult = {
+          mbtiType: player.tag.mbti,
+          percentages: player.tag.mbtiPercentages
+        };
+        // console.log("위젯으로 전송하는 MBTI 결과:", JSON.stringify(mbtiResult));
+        // 위젯으로 결과 데이터 전송
+        player.tag.resultWidget.sendMessage({
+          mbtiResult: mbtiResult
+        });
+      }
+    } else if (data.type === "CLOSE_RESULT") {
+      // 결과 팝업 닫기 요청
+      if (player.tag.resultWidget) {
+        player.tag.resultWidget.destroy();
+        player.tag.resultWidget = null;
+      }
+      // 기존 테스트 결과가 있는 경우에만 환영 팝업 표시
+      if (mbtiInfo === null) {
+        // 결과를 닫으면 환영 팝업 표시 (선택할 수 있도록)
+        player.tag.welcomeWidget = player.showWidget("res/welcome_popup.html", "middle", 600, 600);
+        // 위젯에서 메시지를 받으면 동작하는 함수
+        player.tag.welcomeWidget.onMessage.Add(function (player, data) {
+          if (data.type === "START_MBTI_TEST") {
+            // 테스트 시작 요청 처리
+            if (player.tag.welcomeWidget) {
+              player.tag.welcomeWidget.destroy();
+              player.tag.welcomeWidget = null;
+            }
+            startMbtiTest(player);
+          } else if (data.type === "CHECK_TEST_COMPLETED") {
+            // 테스트 완료 여부 확인 요청
+            if (player.tag.welcomeWidget) {
+              player.tag.welcomeWidget.sendMessage({
+                testCompleted: true
+              });
+            }
+          } else if (data.type === "GO_TO_MBTI_LOUNGE") {
+            // MBTI 라운지로 이동 요청
+            if (player.tag.welcomeWidget) {
+              player.tag.welcomeWidget.destroy();
+              player.tag.welcomeWidget = null;
+            }
+            goToMBTILounge(player);
+          }
+        });
+      }
+    } else if (data.type === "RETRY_MBTI_TEST") {
+      // 테스트 다시 시작 요청
+      if (player.tag.resultWidget) {
+        player.tag.resultWidget.destroy();
+        player.tag.resultWidget = null;
+      }
+      startMbtiTest(player);
+    } else if (data.type === "SHARE_TO_ZEP_CHAT") {
+      // Zep 채팅창에 결과 공유
+      if (data.content) {
+        // 채팅창에 MBTI 결과 공유
+        App.sayToAll("[".concat(player.name, "\uB2D8\uC758 MBTI \uACB0\uACFC] ").concat(player.tag.mbti));
+        App.sayToAll("".concat(getMbtiNickname(player.tag.mbti)));
+      }
+    } else if (data.type === "GO_TO_MBTI_LOUNGE") {
+      // MBTI 라운지로 이동 요청
+      if (player.tag.resultWidget) {
+        player.tag.resultWidget.destroy();
+        player.tag.resultWidget = null;
+      }
+      goToMBTILounge(player);
+    }
+  });
+}
+// MBTI 테스트 시작 함수
+function startMbtiTest(player) {
+  player.tag.questionOrderArr = (0, MBTIQuestions_1.getRandomIdsByDimension)(QuestionCountPerDimension); // 항목별로 n개
+  player.tag.questionNum = player.tag.questionOrderArr.pop();
+  player.tag.answers = [];
+  player.showCenterLabel("MBTI 테스트 준비중...", 0xffffff, 0x00000, 200);
+  var playerId = player.id;
+  App.runLater(function () {
+    var player = App.getPlayerByID(playerId);
+    if (!player) return;
+    player.showCenterLabel("MBTI 테스트 준비 완료!", 0xffffff, 0x00000, 200);
+    player.moveSpeed = 140;
+    player.sendUpdated();
+    renderMbtiQuestion(player);
+    player.tag.init = true;
+  }, 1);
+}
+// MBTI 유형의 별명 반환 함수
+function getMbtiNickname(mbtiType) {
+  var mbtiNicknames = {
+    "ISTJ": "청렴결백한 논리주의자",
+    "ISFJ": "용감한 수호자",
+    "INFJ": "선의의 옹호자",
+    "INTJ": "용의주도한 전략가",
+    "ISTP": "만능 재주꾼",
+    "ISFP": "호기심 많은 예술가",
+    "INFP": "열정적인 중재자",
+    "INTP": "논리적인 사색가",
+    "ESTP": "모험을 즐기는 사업가",
+    "ESFP": "자유로운 영혼의 연예인",
+    "ENFP": "열정적인 활동가",
+    "ENTP": "논쟁을 즐기는 변론가",
+    "ESTJ": "엄격한 관리자",
+    "ESFJ": "사교적인 외교관",
+    "ENFJ": "정의로운 사회운동가",
+    "ENTJ": "대담한 통솔자"
+  };
+  return mbtiNicknames[mbtiType] || "알 수 없는 유형";
+}
 function renderMbtiQuestion(player) {
   // const questionIndex = player.tag.questionNum - 1;
   var mbtiQuestion = MBTIQuestions_1.MBTIQuestions.find(function (d) {
@@ -282,24 +479,36 @@ function saveMbtiResult(key, data, callback) {
   });
 }
 function getMbtiResult(player) {
+  // 이미 MBTI 데이터가 로드된 경우는 중복 호출하지 않음
+  if (player.tag.mbti) return;
   var AWS_API = 'https://jstvymmti6.execute-api.ap-northeast-2.amazonaws.com/liveAppDBRequest';
   var CollectionName = "MBTI_RESULT";
   var requestURL = "".concat(AWS_API, "?collection=").concat(CollectionName, "&key=").concat(player.id);
   var playerId = player.id;
-  // App.sayToAll(`[httpGet] requestURL = ${requestURL}`)
   App.httpGet(requestURL, null, function (res) {
     var player = App.getPlayerByID(playerId);
     if (!player) return;
     var response = JSON.parse(res);
     if (response) {
       if (response.mbtiString) {
-        if (App.mapHashID !== "WaV3qN") {
-          player.spawnAtMap("6epyab", "WaV3qN");
+        // MBTI 결과 데이터 저장
+        player.tag.mbti = response.mbtiString;
+        // mbtiPercentages가 없거나 형식이 다른 경우 기본값 설정
+        if (!response.mbtiPercentages || !response.mbtiPercentages.EI) {
+          player.tag.mbtiPercentages = {
+            EI: response.mbtiString[0] === 'E' ? "E 70% / I 30%" : "I 70% / E 30%",
+            SN: response.mbtiString[1] === 'S' ? "S 70% / N 30%" : "N 70% / S 30%",
+            TF: response.mbtiString[2] === 'T' ? "T 70% / F 30%" : "F 70% / T 30%",
+            JP: response.mbtiString[3] === 'J' ? "J 70% / P 30%" : "P 70% / J 30%"
+          };
         } else {
-          //@ts-ignore
-          player.setCustomEffectSprite(2, MBTI_SPRITES[response.mbtiString], 0, 13, 1);
-          player.sendUpdated();
+          player.tag.mbtiPercentages = response.mbtiPercentages;
         }
+        console.log("설정된 mbtiPercentages (DB):", JSON.stringify(player.tag.mbtiPercentages));
+        // 커스텀 이펙트 설정
+        //@ts-ignore
+        player.setCustomEffectSprite(2, MBTI_SPRITES[response.mbtiString], 0, 13, 1);
+        player.sendUpdated();
       }
     }
   });
@@ -313,12 +522,63 @@ function showLoginRequiredPopup(player) {
   });
 }
 function loginRequired(player) {
-  if (player.tag.systemWidegt) {
-    player.tag.systemWidegt.sendMessage({
+  if (player.tag.systemWidget) {
+    player.tag.systemWidget.sendMessage({
       type: "loginRequired"
     });
   }
   return;
+}
+// 테스트 완료 상태 확인 함수
+function checkTestCompleted(player) {
+  // DB에서 데이터를 불러오기 전에 이미 tag.mbti가 있는지 확인
+  if (player.tag.welcomeWidget && player.tag.mbti) {
+    // 이미 불러온 MBTI 데이터가 있는 경우
+    player.tag.welcomeWidget.sendMessage({
+      testCompleted: true
+    });
+  } else {
+    // DB에서 테스트 결과 다시 확인
+    var AWS_API = 'https://jstvymmti6.execute-api.ap-northeast-2.amazonaws.com/liveAppDBRequest';
+    var CollectionName = "MBTI_RESULT";
+    var requestURL = "".concat(AWS_API, "?collection=").concat(CollectionName, "&key=").concat(player.id);
+    App.httpGet(requestURL, null, function (res) {
+      if (!player.tag.welcomeWidget) return; // 위젯이 이미 닫힌 경우
+      try {
+        var response = JSON.parse(res);
+        if (response && response.mbtiString) {
+          // DB에 결과가 있는 경우
+          player.tag.mbti = response.mbtiString;
+          player.tag.mbtiPercentages = response.mbtiPercentages;
+          player.tag.welcomeWidget.sendMessage({
+            testCompleted: true
+          });
+        } else {
+          // DB에 결과가 없는 경우
+          player.tag.welcomeWidget.sendMessage({
+            testCompleted: false
+          });
+        }
+      } catch (error) {
+        // console.error("MBTI 결과 확인 중 오류:", error);
+        // 오류 발생 시 테스트 완료하지 않은 것으로 처리
+        player.tag.welcomeWidget.sendMessage({
+          testCompleted: false
+        });
+      }
+    });
+  }
+}
+// MBTI 라운지로 이동 함수
+function goToMBTILounge(player) {
+  try {
+    // MBTI 라운지 맵으로 이동
+    player.spawnAtMap("6epyab", "WaV3qN");
+  } catch (error) {
+    // console.error("MBTI 라운지 이동 실패:", error);
+    // 이동 실패 시 플레이어에게 알림
+    player.showCenterLabel("MBTI 라운지 이동에 실패했습니다.", 0xFF0000, 0xFFFFFF, 200);
+  }
 }
 
 /***/ }),

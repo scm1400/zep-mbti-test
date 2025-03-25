@@ -4,210 +4,436 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MBTI 테스트 결과</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
+        :root {
+            --primary-color: #7C4DFF;
+            --primary-light: #B39DDB;
+            --primary-dark: #4527A0;
+            --secondary-color: #FF4081;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --bg-light: #FFFFFF;
+            --bg-medium: #F5F5F5;
+            --bg-dark: rgba(0, 0, 0, 0.7);
+            --border-radius: 16px;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --shadow-strong: 0 15px 35px rgba(124, 77, 255, 0.2);
+            --transition-normal: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            color: #333;
+            min-height: 100vh;
+            color: var(--text-primary);
+            padding: 20px;
+            line-height: 1.6;
         }
+
         .result-container {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            background-color: var(--bg-light);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-strong);
             width: 90%;
             max-width: 700px;
-            padding: 30px;
+            padding: 40px;
             text-align: center;
             position: relative;
+            overflow: hidden;
         }
+
         .result-header {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
         }
+
+        .result-header::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 4px;
+            background-color: var(--primary-color);
+            left: 50%;
+            bottom: -10px;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
         .result-header h1 {
-            color: #5D4FFF;
-            font-size: 28px;
+            color: var(--primary-color);
+            font-size: 32px;
+            font-weight: 700;
             margin-bottom: 10px;
         }
+
         .result-header h2 {
-            color: #5D4FFF;
-            font-size: 20px;
-            font-weight: normal;
+            color: var(--text-secondary);
+            font-size: 18px;
+            font-weight: 400;
             margin-top: 0;
         }
+
         .result-content {
             margin-bottom: 25px;
             line-height: 1.6;
             text-align: left;
         }
+
         .result-type {
-            font-size: 36px;
-            font-weight: bold;
-            color: #5D4FFF;
-            margin: 10px 0;
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 20px 0;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(124, 77, 255, 0.2);
         }
+
         .result-image {
-            width: 150px;
-            height: 150px;
-            margin: 20px auto;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
+            width: 180px;
+            height: 180px;
+            margin: 25px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 120px;
+            filter: drop-shadow(0 5px 15px rgba(124, 77, 255, 0.3));
+            transition: var(--transition-normal);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
+            border-radius: 50%;
+            box-shadow: var(--shadow-soft);
         }
+
+        .result-image:hover {
+            transform: scale(1.05);
+        }
+
         .dimension-bars {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin: 25px 0;
+            gap: 18px;
+            margin: 35px 0;
+            background: var(--bg-medium);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-soft);
         }
+
+        .dimension-title {
+            font-weight: 500;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
         .dimension-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-        .dimension-labels {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            margin-bottom: 5px;
-        }
+
         .dimension-label {
-            font-weight: bold;
+            aspect-ratio: 1/1;
+            font-weight: 700;
             width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 3px 6px rgba(124, 77, 255, 0.3);
         }
+
         .bar-container {
             width: 100%;
-            height: 20px;
+            height: 12px;
             background-color: #e0e0e0;
-            border-radius: 10px;
+            border-radius: 20px;
             overflow: hidden;
-            margin: 0 10px;
+            margin: 0 15px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .bar-fill {
             height: 100%;
-            background-color: #5D4FFF;
-            border-radius: 10px;
+            background: linear-gradient(to right, var(--primary-light), var(--primary-color));
+            border-radius: 20px;
+            transition: width 1s ease-in-out;
         }
+
         .percentage {
             font-size: 14px;
-            color: #666;
+            color: var(--text-secondary);
+            min-width: 120px;
+            text-align: left;
+            font-weight: 500;
         }
+
         .result-description {
             text-align: left;
-            margin: 20px 0;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 10px;
+            margin: 30px 0;
+            padding: 25px;
+            background-color: var(--bg-medium);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
         }
+
+        .result-description::before {
+            content: '"';
+            position: absolute;
+            top: -30px;
+            left: 10px;
+            font-size: 120px;
+            opacity: 0.1;
+            color: var(--primary-color);
+            font-family: Georgia, serif;
+        }
+
         .result-description h3 {
-            color: #5D4FFF;
+            color: var(--primary-color);
             margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 22px;
+            position: relative;
+            display: inline-block;
         }
-        .result-footer {
-            margin-top: 30px;
-        }
-        .result-footer button {
-            background-color: #5D4FFF;
-            color: white;
-            border: none;
-            padding: 12px 30px;
+
+        .result-description p {
+            color: var(--text-secondary);
             font-size: 16px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin: 0 10px;
+            line-height: 1.8;
         }
-        .result-footer button:hover {
-            background-color: #4A3FD1;
+
+        .share-area {
+            margin-top: 30px;
+            background: linear-gradient(to bottom right, #f7f9ff, #eef1f7);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-soft);
         }
+
+        .share-area h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
         .share-buttons {
             display: flex;
             justify-content: center;
             margin-top: 20px;
-            gap: 15px;
+            gap: 20px;
         }
-        .share-button {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            font-size: 20px;
-        }
-        .share-button:hover {
-            background-color: #e0e0e0;
-        }
-        .share-button-copy {
-            background-color: #f0f0f0;
-        }
-        .share-button-zep {
-            background-color: #5D4FFF;
-            color: white;
-        }
-        .tooltip {
-            position: absolute;
-            background-color: #333;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            bottom: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
+
         .share-button-container {
             position: relative;
             display: inline-block;
         }
-        .share-area {
-            margin-top: 15px;
+
+        .share-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            font-size: 22px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
+
+        .share-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .share-button-copy {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .share-button-zep {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .tooltip {
+            position: absolute;
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            opacity: 0;
+            transition: var(--transition-normal);
+            pointer-events: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 4px;
+            border-style: solid;
+            border-color: transparent transparent var(--primary-dark) transparent;
+        }
+
         .share-text-container {
             width: 90%;
             max-width: 500px;
-            margin: 15px auto 5px auto;
+            margin: 25px auto 5px auto;
             display: none;
+            animation: fadeIn 0.5s ease;
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .share-text-label {
             font-size: 14px;
-            color: #555;
+            color: var(--text-secondary);
             text-align: left;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
+
         .share-text-area {
             width: 100%;
             height: 120px;
-            padding: 10px;
-            border-radius: 5px;
-            border: 2px solid #5D4FFF;
-            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid var(--primary-light);
+            background-color: white;
             font-size: 14px;
             resize: none;
-            color: #333;
+            color: var(--text-primary);
             font-family: 'Noto Sans KR', sans-serif;
             overflow-y: auto;
             white-space: pre-wrap;
             word-break: break-word;
             margin: 0;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: var(--transition-normal);
         }
+
+        .share-text-area:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.2);
+        }
+
         .copy-success {
             display: none;
-            color: #5D4FFF;
-            margin-top: 5px;
-            font-size: 14px;
+            color: var(--primary-color);
+            margin-top: 12px;
+            font-size: 15px;
+            font-weight: 500;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-footer {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .result-footer button {
+            background: linear-gradient(to right, var(--primary-color), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(124, 77, 255, 0.3);
+            min-width: 160px;
+        }
+
+        .result-footer button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(124, 77, 255, 0.4);
+        }
+
+        .result-footer button:active {
+            transform: translateY(-1px);
+        }
+
+        #retry-test {
+            background: linear-gradient(to right, #FF4081, #F50057);
+            box-shadow: 0 5px 15px rgba(255, 64, 129, 0.3);
+        }
+
+        #retry-test:hover {
+            box-shadow: 0 8px 20px rgba(255, 64, 129, 0.4);
+        }
+
+        #go-to-lounge {
+            background: linear-gradient(to right, #26C6DA, #00ACC1);
+            box-shadow: 0 5px 15px rgba(38, 198, 218, 0.3);
+        }
+
+        #go-to-lounge:hover {
+            box-shadow: 0 8px 20px rgba(38, 198, 218, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .result-container {
+                padding: 25px;
+                width: 95%;
+            }
+            
+            .result-header h1 {
+                font-size: 26px;
+            }
+            
+            .result-type {
+                font-size: 36px;
+            }
+            
+            .dimension-bars {
+                padding: 20px;
+            }
+            
+            .dimension-bar {
+                flex-wrap: wrap;
+            }
+            
+            .percentage {
+                width: 100%;
+                text-align: center;
+                margin-top: 8px;
+            }
+            
+            .result-footer button {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -222,6 +448,7 @@
         <div class="result-image" id="mbti-image"></div>
         
         <div class="dimension-bars">
+            <div class="dimension-title">나의 성향 분석</div>
             <div class="dimension-bar">
                 <div class="dimension-label">E</div>
                 <div class="bar-container">
@@ -288,14 +515,35 @@
         </div>
         
         <div class="result-footer">
-            <button id="close-result">닫기</button>
             <button id="retry-test">다시 테스트하기</button>
+            <button id="go-to-lounge">MBTI 라운지로 이동</button>
+            <button id="close-result">닫기</button>
         </div>
     </div>
 
     <script>
         let mbtiResult = null;
         let shareText = "";
+        
+        // MBTI 유형별 이모지 매핑
+        const mbtiEmojis = {
+            "ISTJ": "⚖️",
+            "ISFJ": "🛡️",
+            "INFJ": "🔮",
+            "INTJ": "🧠",
+            "ISTP": "🔧",
+            "ISFP": "🎨",
+            "INFP": "🦄",
+            "INTP": "🔬",
+            "ESTP": "🏄‍♂️",
+            "ESFP": "🎭",
+            "ENFP": "✨",
+            "ENTP": "💡",
+            "ESTJ": "📊",
+            "ESFJ": "🤝",
+            "ENFJ": "🌟",
+            "ENTJ": "👑"
+        };
         
         // 앱에서 위젯으로 메시지를 보내면 동작하는 함수
         window.addEventListener("message", function(e) {
@@ -324,6 +572,9 @@
                 });
             });
             
+            // 결과 컨테이너에 나타나는 애니메이션 추가
+            animateResultContainer();
+            
             // 테스트용 더미 데이터 (실제로는 앱에서 데이터를 받아옴)
             /*
             updateResult({
@@ -338,50 +589,136 @@
             */
         });
         
+        // 결과 컨테이너 애니메이션 함수
+        function animateResultContainer() {
+            const container = document.querySelector('.result-container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(20px)';
+            container.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            
+            setTimeout(() => {
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 100);
+        }
+        
         function updateResult(result) {
             mbtiResult = result;
             const mbtiType = result.mbtiType || "ENFP";
             document.getElementById('mbti-type').textContent = mbtiType;
             
-            // 이미지 업데이트
+            console.log("업데이트 함수에서 받은 결과:", JSON.stringify(result));
+            
+            // 이모지 업데이트
             const imageElement = document.getElementById('mbti-image');
-            imageElement.style.backgroundImage = `url('mbti/${mbtiType}.png')`;
+            imageElement.innerHTML = mbtiEmojis[mbtiType] || "✨"; // 기본값은 ENFP의 이모지
             
             // 백분율 표시 및 바 업데이트
             if (result.percentages) {
                 const percentages = result.percentages;
+                console.log("받은 percentages 데이터:", JSON.stringify(percentages));
                 
-                if (percentages.EI) {
-                    document.getElementById('ei-percentage').textContent = percentages.EI;
-                    const eiMatch = percentages.EI.match(/E\s*(\d+)%/);
-                    if (eiMatch && eiMatch[1]) {
-                        document.getElementById('e-bar').style.width = `${eiMatch[1]}%`;
-                    }
-                }
+                // 모든 바 초기화
+                document.querySelectorAll('.bar-fill').forEach(bar => {
+                    bar.style.width = '0%';
+                });
                 
-                if (percentages.SN) {
-                    document.getElementById('sn-percentage').textContent = percentages.SN;
-                    const snMatch = percentages.SN.match(/S\s*(\d+)%/);
-                    if (snMatch && snMatch[1]) {
-                        document.getElementById('s-bar').style.width = `${snMatch[1]}%`;
+                // 지연 후 애니메이션으로 바 채우기
+                setTimeout(() => {
+                    // EI 업데이트
+                    if (percentages.EI) {
+                        document.getElementById('ei-percentage').textContent = percentages.EI;
+                        
+                        // E/I 값 추출
+                        let eValue = 50;
+                        if (percentages.EI.startsWith('E')) {
+                            const match = percentages.EI.match(/E\s*(\d+)%/);
+                            if (match && match[1]) {
+                                eValue = parseInt(match[1]);
+                            }
+                        } else if (percentages.EI.startsWith('I')) {
+                            const match = percentages.EI.match(/I\s*(\d+)%/);
+                            if (match && match[1]) {
+                                eValue = 100 - parseInt(match[1]);
+                            }
+                        }
+                        
+                        document.getElementById('e-bar').style.width = `${eValue}%`;
+                        console.log("E/I 바 설정:", eValue);
                     }
-                }
-                
-                if (percentages.TF) {
-                    document.getElementById('tf-percentage').textContent = percentages.TF;
-                    const tfMatch = percentages.TF.match(/T\s*(\d+)%/);
-                    if (tfMatch && tfMatch[1]) {
-                        document.getElementById('t-bar').style.width = `${tfMatch[1]}%`;
-                    }
-                }
-                
-                if (percentages.JP) {
-                    document.getElementById('jp-percentage').textContent = percentages.JP;
-                    const jpMatch = percentages.JP.match(/J\s*(\d+)%/);
-                    if (jpMatch && jpMatch[1]) {
-                        document.getElementById('j-bar').style.width = `${jpMatch[1]}%`;
-                    }
-                }
+                    
+                    setTimeout(() => {
+                        // SN 업데이트
+                        if (percentages.SN) {
+                            document.getElementById('sn-percentage').textContent = percentages.SN;
+                            
+                            // S/N 값 추출
+                            let sValue = 50;
+                            if (percentages.SN.startsWith('S')) {
+                                const match = percentages.SN.match(/S\s*(\d+)%/);
+                                if (match && match[1]) {
+                                    sValue = parseInt(match[1]);
+                                }
+                            } else if (percentages.SN.startsWith('N')) {
+                                const match = percentages.SN.match(/N\s*(\d+)%/);
+                                if (match && match[1]) {
+                                    sValue = 100 - parseInt(match[1]);
+                                }
+                            }
+                            
+                            document.getElementById('s-bar').style.width = `${sValue}%`;
+                            console.log("S/N 바 설정:", sValue);
+                        }
+                        
+                        setTimeout(() => {
+                            // TF 업데이트
+                            if (percentages.TF) {
+                                document.getElementById('tf-percentage').textContent = percentages.TF;
+                                
+                                // T/F 값 추출
+                                let tValue = 50;
+                                if (percentages.TF.startsWith('T')) {
+                                    const match = percentages.TF.match(/T\s*(\d+)%/);
+                                    if (match && match[1]) {
+                                        tValue = parseInt(match[1]);
+                                    }
+                                } else if (percentages.TF.startsWith('F')) {
+                                    const match = percentages.TF.match(/F\s*(\d+)%/);
+                                    if (match && match[1]) {
+                                        tValue = 100 - parseInt(match[1]);
+                                    }
+                                }
+                                
+                                document.getElementById('t-bar').style.width = `${tValue}%`;
+                                console.log("T/F 바 설정:", tValue);
+                            }
+                            
+                            setTimeout(() => {
+                                // JP 업데이트
+                                if (percentages.JP) {
+                                    document.getElementById('jp-percentage').textContent = percentages.JP;
+                                    
+                                    // J/P 값 추출
+                                    let jValue = 50;
+                                    if (percentages.JP.startsWith('J')) {
+                                        const match = percentages.JP.match(/J\s*(\d+)%/);
+                                        if (match && match[1]) {
+                                            jValue = parseInt(match[1]);
+                                        }
+                                    } else if (percentages.JP.startsWith('P')) {
+                                        const match = percentages.JP.match(/P\s*(\d+)%/);
+                                        if (match && match[1]) {
+                                            jValue = 100 - parseInt(match[1]);
+                                        }
+                                    }
+                                    
+                                    document.getElementById('j-bar').style.width = `${jValue}%`;
+                                    console.log("J/P 바 설정:", jValue);
+                                }
+                            }, 200);
+                        }, 200);
+                    }, 200);
+                }, 400);
             }
             
             // MBTI 유형별 설명 및 별명 업데이트
@@ -453,11 +790,26 @@
             };
             
             const mbtiInfo = mbtiDescriptions[mbtiType] || mbtiDescriptions["ENFP"];
-            document.getElementById('mbti-nickname').textContent = mbtiInfo.nickname;
-            document.getElementById('mbti-description').textContent = mbtiInfo.description;
             
-            // 공유 텍스트 생성
-            createShareText(mbtiType, mbtiInfo, result.percentages);
+            // 애니메이션을 위한 지연
+            setTimeout(() => {
+                document.getElementById('mbti-nickname').textContent = mbtiInfo.nickname;
+                document.getElementById('mbti-description').textContent = mbtiInfo.description;
+                
+                // 결과 설명에 페이드인 효과 추가
+                const descriptionElement = document.querySelector('.result-description');
+                descriptionElement.style.opacity = '0';
+                descriptionElement.style.transform = 'translateY(10px)';
+                descriptionElement.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                
+                setTimeout(() => {
+                    descriptionElement.style.opacity = '1';
+                    descriptionElement.style.transform = 'translateY(0)';
+                }, 100);
+                
+                // 공유 텍스트 생성
+                createShareText(mbtiType, mbtiInfo, result.percentages);
+            }, 1200);
         }
         
         // 공유용 텍스트 생성 함수
@@ -476,6 +828,7 @@
             
             shareText += `💬 ${mbtiInfo.description.substring(0, 100)}...\n\n`;
             shareText += `✅ Zep MBTI 테스트에서 확인하세요!`;
+            shareText += `✅ https://zep.us/play/5rXrlv!`;
             
             // 공유 텍스트를 텍스트 영역에 설정
             document.getElementById('share-text-area').value = shareText;
@@ -483,15 +836,46 @@
         
         // 버튼 클릭 이벤트 처리
         document.getElementById('close-result').addEventListener('click', function() {
-            sendMessageToApp({
-                type: "CLOSE_RESULT"
-            });
+            // 닫기 애니메이션
+            const container = document.querySelector('.result-container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(20px)';
+            
+            // 애니메이션이 끝난 후 앱에 메시지 전송
+            setTimeout(() => {
+                sendMessageToApp({
+                    type: "CLOSE_RESULT"
+                });
+            }, 300);
         });
         
         document.getElementById('retry-test').addEventListener('click', function() {
-            sendMessageToApp({
-                type: "RETRY_MBTI_TEST"
-            });
+            // 닫기 애니메이션
+            const container = document.querySelector('.result-container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(20px)';
+            
+            // 애니메이션이 끝난 후 앱에 메시지 전송
+            setTimeout(() => {
+                sendMessageToApp({
+                    type: "RETRY_MBTI_TEST"
+                });
+            }, 300);
+        });
+        
+        // MBTI 라운지로 이동 버튼
+        document.getElementById('go-to-lounge').addEventListener('click', function() {
+            // 닫기 애니메이션
+            const container = document.querySelector('.result-container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(20px)';
+            
+            // 애니메이션이 끝난 후 앱에 메시지 전송
+            setTimeout(() => {
+                sendMessageToApp({
+                    type: "GO_TO_MBTI_LOUNGE"
+                });
+            }, 300);
         });
         
         // 결과 복사 버튼

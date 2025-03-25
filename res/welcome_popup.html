@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI 테스트 시작</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #7C4DFF;
+            --primary-light: #B39DDB;
+            --primary-dark: #4527A0;
+            --secondary-color: #FF4081;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --bg-light: #FFFFFF;
+            --bg-medium: #F5F5F5;
+            --bg-dark: rgba(0, 0, 0, 0.7);
+            --border-radius: 16px;
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --shadow-strong: 0 15px 35px rgba(124, 77, 255, 0.2);
+            --transition-normal: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-primary);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .popup-container {
+            background-color: var(--bg-light);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-strong);
+            width: 90%;
+            max-width: 600px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .popup-header {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .popup-header::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 4px;
+            background-color: var(--primary-color);
+            left: 50%;
+            bottom: -10px;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .popup-header h1 {
+            color: var(--primary-color);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .popup-content {
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+
+        .popup-content p {
+            margin: 15px 0;
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        .popup-content strong {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .mbti-icons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 30px 0;
+            gap: 12px;
+        }
+
+        .mbti-icon {
+            width: 62px;
+            height: 62px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            font-size: 11px;
+            color: var(--primary-dark);
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition-normal);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mbti-icon::before {
+            content: attr(data-emoji);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: var(--transition-normal);
+        }
+
+        .mbti-icon:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(124, 77, 255, 0.15);
+            background: linear-gradient(135deg, #f5f7fa 0%, #e0e4f0 100%);
+        }
+
+        .mbti-icon:hover .mbti-text {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        .mbti-icon:hover::before {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .mbti-text {
+            transition: var(--transition-normal);
+        }
+
+        .start-message {
+            font-size: 18px;
+            color: var(--primary-dark);
+            font-weight: 500;
+            margin: 25px 0 15px 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+
+        .popup-footer {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .popup-footer button {
+            background: linear-gradient(to right, var(--primary-color), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 17px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(124, 77, 255, 0.3);
+            min-width: 200px;
+        }
+
+        #go-to-lounge {
+            background: linear-gradient(to right, #FF4081, #F50057);
+            box-shadow: 0 5px 15px rgba(255, 64, 129, 0.3);
+        }
+
+        #go-to-lounge:hover {
+            box-shadow: 0 8px 20px rgba(255, 64, 129, 0.4);
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+
+        .illustration {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        .illustration-1 {
+            top: 10%;
+            right: 5%;
+            font-size: 150px;
+            transform: rotate(10deg);
+        }
+
+        .illustration-2 {
+            bottom: 10%;
+            left: 5%;
+            font-size: 150px;
+            transform: rotate(-10deg);
+        }
+
+        @media (max-width: 768px) {
+            .popup-container {
+                padding: 30px 20px;
+                width: 95%;
+            }
+            
+            .popup-header h1 {
+                font-size: 24px;
+            }
+            
+            .mbti-icons {
+                gap: 8px;
+            }
+            
+            .mbti-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 10px;
+            }
+            
+            .mbti-icon::before {
+                font-size: 20px;
+            }
+            
+            .illustration {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="popup-container">
+        <div class="illustration illustration-1">🧠</div>
+        <div class="illustration illustration-2">💭</div>
+        
+        <div class="popup-header">
+            <h1>MBTI 테스트에 오신 것을 환영합니다!</h1>
+        </div>
+        
+        <div class="popup-content">
+            <p>이 테스트는 당신의 성격 유형을 파악하고 자신에 대해 더 깊이 이해할 수 있는 기회를 제공합니다.</p>
+            <p>총 <strong>60개</strong>의 질문에 답변하며, 솔직하게 응답할수록 더 정확한 결과를 얻을 수 있습니다.</p>
+            
+            <div class="mbti-icons">
+                <div class="mbti-icon" data-emoji="⚖️"><span class="mbti-text">ISTJ</span></div>
+                <div class="mbti-icon" data-emoji="🛡️"><span class="mbti-text">ISFJ</span></div>
+                <div class="mbti-icon" data-emoji="🔮"><span class="mbti-text">INFJ</span></div>
+                <div class="mbti-icon" data-emoji="🧠"><span class="mbti-text">INTJ</span></div>
+                <div class="mbti-icon" data-emoji="🔧"><span class="mbti-text">ISTP</span></div>
+                <div class="mbti-icon" data-emoji="🎨"><span class="mbti-text">ISFP</span></div>
+                <div class="mbti-icon" data-emoji="🦄"><span class="mbti-text">INFP</span></div>
+                <div class="mbti-icon" data-emoji="🔬"><span class="mbti-text">INTP</span></div>
+                <div class="mbti-icon" data-emoji="🏄‍♂️"><span class="mbti-text">ESTP</span></div>
+                <div class="mbti-icon" data-emoji="🎭"><span class="mbti-text">ESFP</span></div>
+                <div class="mbti-icon" data-emoji="✨"><span class="mbti-text">ENFP</span></div>
+                <div class="mbti-icon" data-emoji="💡"><span class="mbti-text">ENTP</span></div>
+                <div class="mbti-icon" data-emoji="📊"><span class="mbti-text">ESTJ</span></div>
+                <div class="mbti-icon" data-emoji="🤝"><span class="mbti-text">ESFJ</span></div>
+                <div class="mbti-icon" data-emoji="🌟"><span class="mbti-text">ENFJ</span></div>
+                <div class="mbti-icon" data-emoji="👑"><span class="mbti-text">ENTJ</span></div>
+            </div>
+            
+            <p class="start-message" id="first-time-message">테스트를 시작하시겠습니까?</p>
+            <p class="start-message hidden" id="returning-message">이전에 테스트를 완료하셨습니다.<br>다시 테스트를 진행하거나 MBTI 라운지로 이동하실 수 있습니다.</p>
+        </div>
+        
+        <div class="popup-footer">
+            <button id="start-test">테스트 시작하기</button>
+            <button id="go-to-lounge" class="hidden">MBTI 라운지로 이동</button>
+        </div>
+    </div>
+
+    <script>
+        // MBTI 아이콘 애니메이션 효과
+        document.addEventListener('DOMContentLoaded', function() {
+            // 사용자 테스트 완료 여부 확인
+            sendMessageToApp({
+                type: "CHECK_TEST_COMPLETED"
+            });
+            
+            // 아이콘들 애니메이션
+            const icons = document.querySelectorAll('.mbti-icon');
+            icons.forEach((icon, index) => {
+                // 아이콘을 순차적으로 나타나게 함
+                icon.style.opacity = '0';
+                icon.style.transform = 'scale(0.8)';
+                
+                setTimeout(() => {
+                    icon.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    icon.style.opacity = '1';
+                    icon.style.transform = 'scale(1)';
+                }, 100 + (index * 30)); // 각 아이콘마다 시간차 부여
+            });
+            
+            // 시작 버튼 클릭 시 페이드 아웃 효과
+            document.getElementById('start-test').addEventListener('click', function() {
+                const container = document.querySelector('.popup-container');
+                container.style.opacity = '0';
+                container.style.transform = 'translateY(20px)';
+                
+                // 애니메이션 후 메시지 전송
+                setTimeout(() => {
+                    // 앱으로 메시지 전송
+                    sendMessageToApp({
+                        type: "START_MBTI_TEST"
+                    });
+                }, 500);
+            });
+            
+            // MBTI 라운지로 이동 버튼
+            document.getElementById('go-to-lounge').addEventListener('click', function() {
+                const container = document.querySelector('.popup-container');
+                container.style.opacity = '0';
+                container.style.transform = 'translateY(20px)';
+                
+                // 애니메이션 후 메시지 전송
+                setTimeout(() => {
+                    // 앱으로 메시지 전송
+                    sendMessageToApp({
+                        type: "GO_TO_MBTI_LOUNGE"
+                    });
+                }, 500);
+            });
+        });
+
+        // 앱에서 위젯으로 메시지를 보내면 동작하는 함수
+        window.addEventListener("message", function(e) {
+            console.log("메시지 수신:", e.data);
+            
+            // 사용자가 테스트를 완료했는지 확인 응답 처리
+            if (e.data && e.data.testCompleted) {
+                // 테스트 완료 상태에 따라 UI 변경
+                if (e.data.testCompleted === true) {
+                    document.getElementById('first-time-message').classList.add('hidden');
+                    document.getElementById('returning-message').classList.remove('hidden');
+                    document.getElementById('go-to-lounge').classList.remove('hidden');
+                }
+            }
+        });
+
+        // 앱으로 메시지를 보내는 함수
+        function sendMessageToApp(data) {
+            window.parent.postMessage(data, "*");
+        }
+    </script>
+</body>
+</html> 
