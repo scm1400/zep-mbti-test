@@ -16,9 +16,9 @@
             --bg-light: #FFFFFF;
             --bg-medium: #F5F5F5;
             --bg-dark: rgba(0, 0, 0, 0.7);
-            --border-radius: 16px;
-            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.1);
-            --shadow-strong: 0 15px 35px rgba(124, 77, 255, 0.2);
+            --border-radius: 10px;
+            --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-strong: 0 8px 20px rgba(124, 77, 255, 0.15);
             --transition-normal: all 0.3s ease;
         }
 
@@ -36,24 +36,24 @@
             align-items: center;
             min-height: 100vh;
             color: var(--text-primary);
-            padding: 20px;
-            line-height: 1.6;
+            padding: 10px;
+            line-height: 1.5;
         }
 
         .result-container {
             background-color: var(--bg-light);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow-strong);
-            width: 90%;
-            max-width: 700px;
-            padding: 40px;
+            width: 80%;
+            max-width: 480px;
+            padding: 15px;
             text-align: center;
             position: relative;
             overflow: hidden;
         }
 
         .result-header {
-            margin-bottom: 30px;
+            margin-bottom: 12px;
             position: relative;
             z-index: 1;
         }
@@ -61,70 +61,66 @@
         .result-header::after {
             content: '';
             position: absolute;
-            width: 60px;
-            height: 4px;
+            width: 40px;
+            height: 3px;
             background-color: var(--primary-color);
             left: 50%;
-            bottom: -10px;
+            bottom: -6px;
             transform: translateX(-50%);
             border-radius: 2px;
         }
 
         .result-header h1 {
             color: var(--primary-color);
-            font-size: 32px;
+            font-size: 19px;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 3px;
         }
 
         .result-header h2 {
             color: var(--text-secondary);
-            font-size: 18px;
+            font-size: 14px;
             font-weight: 400;
             margin-top: 0;
         }
 
-        .result-content {
-            margin-bottom: 25px;
-            line-height: 1.6;
-            text-align: left;
-        }
-
-        .result-type {
-            font-size: 42px;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin: 20px 0;
-            letter-spacing: 2px;
-            text-shadow: 0 2px 10px rgba(124, 77, 255, 0.2);
-        }
-
-        .result-image {
-            width: 180px;
-            height: 180px;
-            margin: 25px auto;
+        .result-main {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 120px;
-            filter: drop-shadow(0 5px 15px rgba(124, 77, 255, 0.3));
+            margin: 10px 0;
+        }
+
+        .result-type {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0 15px;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 6px rgba(124, 77, 255, 0.2);
+        }
+
+        .result-image {
+            width: 85px;
+            height: 85px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 55px;
+            filter: drop-shadow(0 4px 10px rgba(124, 77, 255, 0.3));
             transition: var(--transition-normal);
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
             border-radius: 50%;
             box-shadow: var(--shadow-soft);
         }
 
-        .result-image:hover {
-            transform: scale(1.05);
-        }
-
         .dimension-bars {
             display: flex;
             flex-direction: column;
-            gap: 18px;
-            margin: 35px 0;
+            gap: 8px;
+            margin: 15px 0;
             background: var(--bg-medium);
-            padding: 25px;
+            padding: 12px;
             border-radius: var(--border-radius);
             box-shadow: var(--shadow-soft);
         }
@@ -132,8 +128,8 @@
         .dimension-title {
             font-weight: 500;
             color: var(--primary-dark);
-            margin-bottom: 15px;
-            font-size: 18px;
+            margin-bottom: 6px;
+            font-size: 14px;
         }
 
         .dimension-bar {
@@ -145,46 +141,47 @@
         .dimension-label {
             aspect-ratio: 1/1;
             font-weight: 700;
-            width: 30px;
-            height: 30px;
+            width: 20px;
+            height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
             background: var(--primary-color);
             color: white;
-            box-shadow: 0 3px 6px rgba(124, 77, 255, 0.3);
+            box-shadow: 0 2px 4px rgba(124, 77, 255, 0.3);
+            font-size: 12px;
         }
 
         .bar-container {
             width: 100%;
-            height: 12px;
+            height: 8px;
             background-color: #e0e0e0;
-            border-radius: 20px;
+            border-radius: 10px;
             overflow: hidden;
-            margin: 0 15px;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 0 8px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .bar-fill {
             height: 100%;
             background: linear-gradient(to right, var(--primary-light), var(--primary-color));
-            border-radius: 20px;
+            border-radius: 10px;
             transition: width 1s ease-in-out;
         }
 
         .percentage {
-            font-size: 14px;
+            font-size: 12px;
             color: var(--text-secondary);
-            min-width: 120px;
+            min-width: 100px;
             text-align: left;
             font-weight: 500;
         }
 
         .result-description {
             text-align: left;
-            margin: 30px 0;
-            padding: 25px;
+            margin: 15px 0;
+            padding: 12px;
             background-color: var(--bg-medium);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow-soft);
@@ -195,9 +192,9 @@
         .result-description::before {
             content: '"';
             position: absolute;
-            top: -30px;
-            left: 10px;
-            font-size: 120px;
+            top: -20px;
+            left: 5px;
+            font-size: 70px;
             opacity: 0.1;
             color: var(--primary-color);
             font-family: Georgia, serif;
@@ -206,38 +203,43 @@
         .result-description h3 {
             color: var(--primary-color);
             margin-top: 0;
-            margin-bottom: 15px;
-            font-size: 22px;
+            margin-bottom: 6px;
+            font-size: 15px;
             position: relative;
             display: inline-block;
         }
 
         .result-description p {
             color: var(--text-secondary);
-            font-size: 16px;
-            line-height: 1.8;
+            font-size: 13px;
+            line-height: 1.4;
         }
 
         .share-area {
-            margin-top: 30px;
+            margin-top: 15px;
             background: linear-gradient(to bottom right, #f7f9ff, #eef1f7);
-            padding: 25px;
+            padding: 12px;
             border-radius: var(--border-radius);
             box-shadow: var(--shadow-soft);
         }
 
+        .share-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
         .share-area h3 {
             color: var(--primary-color);
-            margin-bottom: 20px;
-            font-size: 20px;
+            font-size: 15px;
             font-weight: 600;
+            margin: 0;
         }
 
         .share-buttons {
             display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            gap: 20px;
+            gap: 10px;
         }
 
         .share-button-container {
@@ -246,21 +248,21 @@
         }
 
         .share-button {
-            width: 50px;
-            height: 50px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             transition: var(--transition-normal);
-            font-size: 22px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            font-size: 15px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
         }
 
         .share-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
         }
 
         .share-button-copy {
@@ -276,58 +278,57 @@
             position: absolute;
             background-color: var(--primary-dark);
             color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            bottom: -40px;
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            bottom: -30px;
             left: 50%;
             transform: translateX(-50%);
             white-space: nowrap;
             opacity: 0;
             transition: var(--transition-normal);
             pointer-events: none;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
         }
 
         .tooltip::after {
             content: '';
             position: absolute;
-            top: -8px;
+            top: -6px;
             left: 50%;
             transform: translateX(-50%);
-            border-width: 4px;
+            border-width: 3px;
             border-style: solid;
             border-color: transparent transparent var(--primary-dark) transparent;
         }
 
         .share-text-container {
-            width: 90%;
-            max-width: 500px;
-            margin: 25px auto 5px auto;
+            width: 100%;
+            margin: 12px auto 5px auto;
             display: none;
             animation: fadeIn 0.5s ease;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .share-text-label {
-            font-size: 14px;
+            font-size: 12px;
             color: var(--text-secondary);
             text-align: left;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
 
         .share-text-area {
             width: 100%;
-            height: 120px;
-            padding: 15px;
-            border-radius: 10px;
-            border: 2px solid var(--primary-light);
+            height: 75px;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid var(--primary-light);
             background-color: white;
-            font-size: 14px;
+            font-size: 12px;
             resize: none;
             color: var(--text-primary);
             font-family: 'Noto Sans KR', sans-serif;
@@ -335,30 +336,30 @@
             white-space: pre-wrap;
             word-break: break-word;
             margin: 0;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
             transition: var(--transition-normal);
         }
 
         .share-text-area:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(124, 77, 255, 0.2);
+            box-shadow: 0 0 0 2px rgba(124, 77, 255, 0.2);
         }
 
         .copy-success {
             display: none;
             color: var(--primary-color);
-            margin-top: 12px;
-            font-size: 15px;
+            margin-top: 8px;
+            font-size: 13px;
             font-weight: 500;
             animation: fadeIn 0.5s ease;
         }
 
         .result-footer {
-            margin-top: 40px;
+            margin-top: 15px;
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 6px;
             flex-wrap: wrap;
         }
 
@@ -366,59 +367,51 @@
             background: linear-gradient(to right, var(--primary-color), var(--primary-dark));
             color: white;
             border: none;
-            padding: 14px 30px;
-            font-size: 16px;
-            border-radius: 30px;
+            padding: 7px 12px;
+            font-size: 12px;
+            border-radius: 16px;
             cursor: pointer;
             transition: var(--transition-normal);
             font-weight: 500;
-            box-shadow: 0 5px 15px rgba(124, 77, 255, 0.3);
-            min-width: 160px;
+            box-shadow: 0 3px 8px rgba(124, 77, 255, 0.3);
+            min-width: 105px;
         }
 
         .result-footer button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(124, 77, 255, 0.4);
-        }
-
-        .result-footer button:active {
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(124, 77, 255, 0.4);
         }
 
         #retry-test {
             background: linear-gradient(to right, #FF4081, #F50057);
-            box-shadow: 0 5px 15px rgba(255, 64, 129, 0.3);
+            box-shadow: 0 3px 8px rgba(255, 64, 129, 0.3);
         }
 
         #retry-test:hover {
-            box-shadow: 0 8px 20px rgba(255, 64, 129, 0.4);
+            box-shadow: 0 5px 12px rgba(255, 64, 129, 0.4);
         }
 
         #go-to-lounge {
             background: linear-gradient(to right, #26C6DA, #00ACC1);
-            box-shadow: 0 5px 15px rgba(38, 198, 218, 0.3);
+            box-shadow: 0 3px 8px rgba(38, 198, 218, 0.3);
         }
 
         #go-to-lounge:hover {
-            box-shadow: 0 8px 20px rgba(38, 198, 218, 0.4);
+            box-shadow: 0 5px 12px rgba(38, 198, 218, 0.4);
         }
 
         @media (max-width: 768px) {
             .result-container {
-                padding: 25px;
-                width: 95%;
+                width: 90%;
+                padding: 12px;
             }
             
-            .result-header h1 {
-                font-size: 26px;
+            .result-main {
+                flex-direction: column;
             }
             
             .result-type {
-                font-size: 36px;
-            }
-            
-            .dimension-bars {
-                padding: 20px;
+                margin: 5px 0;
             }
             
             .dimension-bar {
@@ -428,7 +421,13 @@
             .percentage {
                 width: 100%;
                 text-align: center;
-                margin-top: 8px;
+                margin-top: 4px;
+                min-width: auto;
+                font-size: 11px;
+            }
+            
+            .result-footer {
+                flex-direction: column;
             }
             
             .result-footer button {
@@ -444,8 +443,10 @@
             <h2>당신의 성격 유형은...</h2>
         </div>
         
-        <div class="result-type" id="mbti-type">ENFP</div>
-        <div class="result-image" id="mbti-image"></div>
+        <div class="result-main">
+            <div class="result-image" id="mbti-image"></div>
+            <div class="result-type" id="mbti-type">ENFP</div>
+        </div>
         
         <div class="dimension-bars">
             <div class="dimension-title">나의 성향 분석</div>
@@ -488,23 +489,25 @@
         
         <div class="result-description">
             <h3 id="mbti-nickname">열정적인 활동가 (ENFP)</h3>
-            <p id="mbti-description">열정적이고 창의적인 성격으로, 항상 새로운 가능성을 찾고 다양한 아이디어를 시도하는 것을 좋아합니다. 사람들과의 관계를 중요시하며, 다른 사람의 감정을 잘 이해하고 공감하는 능력이 뛰어납니다. 자유로운 분위기에서 일하는 것을 선호하며, 규칙이나 틀에 얽매이는 것을 좋아하지 않습니다.</p>
+            <p id="mbti-description">열정적이고 창의적인 성격으로, 항상 새로운 가능성을 찾고 다양한 아이디어를 시도하는 것을 좋아합니다. 사람들과의 관계를 중요시하며, 다른 사람의 감정을 잘 이해하고 공감하는 능력이 뛰어납니다.</p>
         </div>
         
         <div class="share-area">
-            <h3>결과 공유하기</h3>
-            <div class="share-buttons">
-                <div class="share-button-container">
-                    <div class="share-button share-button-copy" id="copy-result">
-                        <span>📋</span>
+            <div class="share-header">
+                <h3>결과 공유하기</h3>
+                <div class="share-buttons">
+                    <div class="share-button-container">
+                        <div class="share-button share-button-copy" id="copy-result">
+                            <span>📋</span>
+                        </div>
+                        <div class="tooltip">결과 복사하기</div>
                     </div>
-                    <div class="tooltip">결과 복사하기</div>
-                </div>
-                <div class="share-button-container">
-                    <div class="share-button share-button-zep" id="share-with-zep">
-                        <span>Z</span>
+                    <div class="share-button-container">
+                        <div class="share-button share-button-zep" id="share-with-zep">
+                            <span>Z</span>
+                        </div>
+                        <div class="tooltip">Zep 대화창에 공유하기</div>
                     </div>
-                    <div class="tooltip">Zep 대화창에 공유하기</div>
                 </div>
             </div>
             <div id="copy-success" class="copy-success">✓ 클립보드에 복사되었습니다</div>
@@ -516,7 +519,7 @@
         
         <div class="result-footer">
             <button id="retry-test">다시 테스트하기</button>
-            <button id="go-to-lounge">MBTI 라운지로 이동</button>
+            <button id="go-to-lounge">MBTI 라운지</button>
             <button id="close-result">닫기</button>
         </div>
     </div>
